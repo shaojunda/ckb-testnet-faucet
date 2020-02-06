@@ -1,0 +1,2 @@
+class ClaimEventsController < ApplicationController
+end
