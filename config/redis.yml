@@ -1,6 +1,6 @@
 defaults: &defaults
-  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/9" } %>
-  password: <%= ENV["REDIS_PASSWORD"] %>
+  url: <%= Rails.application.credentials.REDIS[:URL] %>
+  password: <%= Rails.application.credentials.REDIS[:PASSWORD] %>
 
 development:
   <<: *defaults
