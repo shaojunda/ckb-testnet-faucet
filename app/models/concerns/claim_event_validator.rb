@@ -14,7 +14,7 @@ class ClaimEventValidator < ActiveModel::Validator
 
   private
     def payment_amount_must_be_less_or_equal_to_daily_limit(record)
-      if ClaimEvent.where("created_at_unixtimestamp >= ? and created_at_unixtimestamp <= ?", Time.current.beginning_of_day.to_i, Time.current.end_of_day.to_i).sum(:capacity) >= MAXIMUM_PAYMENT_AMOUNT_PER_DAY
+      if ClaimEvent.daily.sum(:capacity) >= MAXIMUM_PAYMENT_AMOUNT_PER_DAY
         record.errors.add(:address_hash, "Faucet payment amount exceeds the daily limit.")
       end
     end
@@ -38,7 +38,7 @@ class ClaimEventValidator < ActiveModel::Validator
     end
 
     def receive_up_to_10_rewards_per_IP_per_day(record)
-      if ClaimEvent.where(ip_addr: record.ip_addr).where("created_at_unixtimestamp >= ? and created_at_unixtimestamp <= ?", Time.current.beginning_of_day.to_i, Time.current.end_of_day.to_i).count >= MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY
+      if ClaimEvent.where(ip_addr: record.ip_addr).daily.count >= MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY
         record.errors.add(:address_hash, "Get up to 8 times claim per IP per day.")
       end
     end
