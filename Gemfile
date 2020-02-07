@@ -61,7 +61,6 @@ group :development do
   gem "rubocop-performance"
   gem "awesome_print"
   gem "annotate"
-  gem "awesome_print"
 end
 
 group :test do
