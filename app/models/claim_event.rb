@@ -5,6 +5,7 @@ class ClaimEvent < ApplicationRecord
   enum status: { pending: 0, processed: 1 }
   enum tx_status: { pending: 0, proposed: 1, committed: 2 }, _prefix: :tx
 
+  validates_presence_of :address_hash, :capacity, :created_at_unixtimestamp, :ip_addr, on: :create
   validates_with ClaimEventValidator
 
   scope :daily, -> { where("created_at_unixtimestamp >= ? and created_at_unixtimestamp <= ?", Time.current.beginning_of_day.to_i, Time.current.end_of_day.to_i) }
