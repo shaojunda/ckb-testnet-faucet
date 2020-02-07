@@ -32,12 +32,19 @@ if ENV["CI"] == "true"
   SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
 
+module RequestHelpers
+  def json
+    JSON.parse(response.body)
+  end
+end
+
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   # parallelize(workers: :number_of_processors)
 
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   include FactoryBot::Syntax::Methods
+  include ::RequestHelpers
 
   # Add more helper methods to be used by all tests here...
   def before_setup
