@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rack::Attack
   ### Configure Cache ###
 
@@ -24,7 +26,7 @@ class Rack::Attack
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:req/ip:#{req.ip}"
   throttle("req/ip", limit: 10, period: 10.seconds) do |req|
-    if req.path == '/claim_events' && req.post?
+    if req.path == "/claim_events" && req.post?
       req.ip
     end
   end
