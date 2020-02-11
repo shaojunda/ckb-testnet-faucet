@@ -17,6 +17,7 @@ require_relative "../config/environment"
 require "rails/test_help"
 
 DatabaseCleaner.strategy = :transaction
+Rack::Attack.enabled = false
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
