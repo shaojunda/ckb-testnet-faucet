@@ -3,8 +3,11 @@
 class ClaimEventValidator < ActiveModel::Validator
   MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY = 8
   MAXIMUM_PAYMENT_AMOUNT_PER_DAY = 4_000_000
+  MINIMUM_ADDRESS_HASH_LENGTH = 40
 
   def validate(record)
+    record.errors.add(:address_hash, "Address is invalid.") and return if record.address_hash.length < MINIMUM_ADDRESS_HASH_LENGTH
+
     claim_interval_must_be_greater_than_3hours(record)
     receive_up_to_10_rewards_per_IP_per_day(record)
     address_hash_must_be_a_testnet_address(record)
@@ -26,6 +29,7 @@ class ClaimEventValidator < ActiveModel::Validator
 
     def address_hash_must_be_a_testnet_address(record)
       parsed_address = CKB::AddressParser.new(record.address_hash).parse
+
       if parsed_address.mode != CKB::MODE::TESTNET
         record.errors.add(:address_hash, "Address must be a testnet address.")
       end

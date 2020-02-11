@@ -33,6 +33,15 @@ class ClaimEventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should reject claim when address hash is invalid" do
+    address_hash = "ckt1q3w9q60tppt7l3j7r09qcp7lxnp3vcanvgha8pmvsa3jplykxn32s"
+
+    post claim_events_url, params: { claim_event: { address_hash: address_hash } }
+
+    assert_response 422
+    assert_equal "Address is invalid.", json["address_hash"].first
+  end
+
+  test "should reject claim when address hash length is less than minimum" do
     address_hash = "123"
 
     post claim_events_url, params: { claim_event: { address_hash: address_hash } }
