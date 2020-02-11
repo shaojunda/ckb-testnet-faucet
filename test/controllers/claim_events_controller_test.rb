@@ -68,4 +68,13 @@ class ClaimEventsControllerTest < ActionDispatch::IntegrationTest
     assert_response 422
     assert_equal "Faucet payment amount exceeds the daily limit.", json["address_hash"].first
   end
+
+  test "should reject claim when target address hash is official address" do
+    account = create(:account)
+
+    post claim_events_url, params: { claim_event: { address_hash: account.address_hash } }
+
+    assert_response 422
+    assert_equal "Does not support transfers to official address.", json["address_hash"].first
+  end
 end
