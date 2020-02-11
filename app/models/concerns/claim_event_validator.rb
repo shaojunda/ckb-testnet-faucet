@@ -9,10 +9,15 @@ class ClaimEventValidator < ActiveModel::Validator
     receive_up_to_10_rewards_per_IP_per_day(record)
     address_hash_must_be_a_testnet_address(record)
     address_hash_must_be_short_payload_format(record)
+    address_hash_cannot_be_official_address(record)
     payment_amount_must_be_less_or_equal_to_daily_limit(record)
   end
 
   private
+    def address_hash_cannot_be_official_address(record)
+      record.errors.add(:address_hash, "Does not support transfers to official address.") if Account.exists?(address_hash: record.address_hash)
+    end
+
     def payment_amount_must_be_less_or_equal_to_daily_limit(record)
       if ClaimEvent.daily.sum(:capacity) >= MAXIMUM_PAYMENT_AMOUNT_PER_DAY
         record.errors.add(:address_hash, "Faucet payment amount exceeds the daily limit.")
