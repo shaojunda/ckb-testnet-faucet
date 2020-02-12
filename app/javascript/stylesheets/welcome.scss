@@ -2,6 +2,30 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
-div[data-react-class="Welcome"] {
-  margin-top: 10px;
+.form-container {
+  background-image: url(../images/bg.jpg);
+  background-position: center center;
+  background-size: cover;
+  height: 515px;
+  padding-top: 130px;
+}
+
+.img-container {
+  display: flex;
+  margin-bottom: 40px;
+  img {
+    width: auto;
+    height: 120px;
+  }
+}
+
+.content-container {
+  display: flex;
+  color: #fff;
+  margin-bottom: 20px;
+  @media only screen and (max-width: 700px) {
+    h1 {
+      font-size: 2rem;
+    }
+  }
 }

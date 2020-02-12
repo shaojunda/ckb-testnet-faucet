@@ -10,3 +10,24 @@
 nav.nav-bg {
   background-color: rgb(4, 6, 7);
 }
+
+body {
+  background-color: #f9f9f9;
+}
+
+.nav-logo {
+  display: inline-block;
+  width: 150px;
+  height: 28px;
+  font-size: 0;
+  line-height: 0;
+  vertical-align: middle;
+  background-size: 100%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-image: url(../images/ckb_logo.png);
+  @media only screen and (max-width: 700px) {
+    width: 110px;
+    background-image: url(../images/mobile_ckb_logo.png);
+  }
+}

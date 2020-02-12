@@ -3,6 +3,7 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
 nav.footer {
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,5 +12,9 @@ nav.footer {
   p {
     margin: 0;
     padding: 21px;
+  }
+  @media only screen and (max-width: 700px) {
+    padding: 10px;
+    font-size: 8px;
   }
 }
