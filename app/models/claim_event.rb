@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ClaimEvent < ApplicationRecord
-  DEFAULT_CLAIM_CAPACITY = 5000
+  DEFAULT_CLAIM_CAPACITY = 5000 * 10**8
   enum status: { pending: 0, processed: 1 }
   enum tx_status: { pending: 0, proposed: 1, committed: 2 }, _prefix: :tx
 
@@ -17,7 +17,7 @@ end
 #
 #  id                       :bigint           not null, primary key
 #  address_hash             :string
-#  capacity                 :integer
+#  capacity                 :decimal(30, )
 #  created_at_unixtimestamp :integer
 #  fee                      :decimal(20, )
 #  ip_addr                  :inet

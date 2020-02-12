@@ -4,7 +4,7 @@ class CreateClaimEvents < ActiveRecord::Migration[6.0]
   def change
     create_table :claim_events do |t|
       t.string :address_hash
-      t.integer :capacity
+      t.decimal :capacity, precision: 30
       t.integer :created_at_unixtimestamp
       t.integer :status, limit: 1, default: "0"
       t.bigint :ckb_transaction_id
