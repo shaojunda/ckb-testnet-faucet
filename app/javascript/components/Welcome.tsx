@@ -55,6 +55,7 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
             xs="12"
             md="8"
             lg="6"
+            xl="4"
             className="align-self-center justify-content-center img-container"
           >
             <img src={CKbIcon} alt="" />
@@ -65,6 +66,7 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
             xs="12"
             md="8"
             lg="6"
+            xl="4"
             className="justify-content-center content-container"
           >
             <h1>Nervos Aggron Faucet</h1>
@@ -75,6 +77,18 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
             xs="12"
             md="8"
             lg="6"
+            xl="4"
+            className="justify-content-center content-container"
+          >
+            <p>Claim testnet 50000 CKB from the faucet once every 8 hours</p>
+          </Col>
+        </Row>
+        <Row className="justify-content-center align-items-center">
+          <Col
+            xs="12"
+            md="8"
+            lg="6"
+            xl="4"
             className=" justify-content-center align-self-center"
           >
             <ClaimEventForm
@@ -82,6 +96,17 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
               handleInput={handleInput}
               handleSubmit={handleSubmit}
             ></ClaimEventForm>
+          </Col>
+        </Row>
+        <Row className="justify-content-center align-items-center">
+          <Col
+            xs="12"
+            md="8"
+            lg="6"
+            xl="4"
+            className="justify-content-center content-container"
+          >
+            <p>Faucet address balance is 10000000000 CKB</p>
           </Col>
         </Row>
       </Container>

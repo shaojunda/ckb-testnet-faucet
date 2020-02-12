@@ -7,7 +7,7 @@
   background-position: center center;
   background-size: cover;
   height: 515px;
-  padding-top: 130px;
+  padding-top: 92px;
 }
 
 .img-container {
@@ -22,10 +22,18 @@
 .content-container {
   display: flex;
   color: #fff;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  p {
+    font-size: 12px;
+    color: rgb(186, 186, 186);
+  }
   @media only screen and (max-width: 700px) {
     h1 {
       font-size: 2rem;
+    }
+    p {
+      font-size: 10px;
     }
   }
 }
