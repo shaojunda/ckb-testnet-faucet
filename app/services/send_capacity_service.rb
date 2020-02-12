@@ -8,6 +8,8 @@ class SendCapacityService
   def call
     ClaimEvent.transaction do
       first_pending_event = ClaimEvent.order(:id).pending.first
+      return if first_pending_event.blank?
+
       first_pending_event.lock!
       if first_pending_event.tx_hash.present?
         tx = ckb_wallet.get_transaction(first_pending_event.tx_hash)

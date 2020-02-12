@@ -11,7 +11,7 @@ class ClaimEventValidator < ActiveModel::Validator
     claim_interval_must_be_greater_than_3hours(record)
     receive_up_to_10_rewards_per_IP_per_day(record)
     address_hash_must_be_a_testnet_address(record)
-    address_hash_must_be_short_payload_format(record)
+    address_hash_cannot_be_short_multisig(record)
     address_hash_cannot_be_official_address(record)
     payment_amount_must_be_less_or_equal_to_daily_limit(record)
   end
@@ -37,10 +37,10 @@ class ClaimEventValidator < ActiveModel::Validator
       record.errors.add(:address_hash, "Address is invalid.")
     end
 
-    def address_hash_must_be_short_payload_format(record)
+    def address_hash_cannot_be_short_multisig(record)
       parsed_address = CKB::AddressParser.new(record.address_hash).parse
-      if parsed_address.address_type != "SHORTSINGLESIG"
-        record.errors.add(:address_hash, "Address must be a blake160 short payload format.")
+      if parsed_address.address_type == "SHORTMULTISIG"
+        record.errors.add(:address_hash, "Address cannot be multisig short payload format.")
       end
     rescue NoMethodError, CKB::AddressParser::InvalidFormatTypeError
       record.errors.add(:address_hash, "Address is invalid.")

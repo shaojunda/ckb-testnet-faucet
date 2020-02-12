@@ -51,12 +51,12 @@ class ClaimEventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should reject claim when address is not short payload format" do
-    address_hash = "ckt1q3w9q60tppt7l3j7r09qcp7lxnp3vcanvgha8pmvsa3jplykxn32s08dj83qavwc4l4ceyeta2ryhkahxrndxacqqqqqqqgqyqx3vx8k"
+    address_hash = "ckt1qyqlqn8vsj7r0a5rvya76tey9jd2rdnca8lqh4kcuq"
 
     post claim_events_url, params: { claim_event: { address_hash: address_hash } }
 
     assert_response 422
-    assert_equal "Address must be a blake160 short payload format.", json["address_hash"].first
+    assert_equal "Address cannot be multisig short payload format.", json["address_hash"].first
   end
 
   test "should reject claim when address is not testnet address" do
