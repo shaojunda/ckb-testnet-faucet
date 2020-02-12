@@ -13,6 +13,10 @@ declare namespace State {
     address_hash: string;
   }
 }
+declare module "*.png" {
+  const value: any;
+  export = value;
+}
 
-import ClaimEventPresenter = State.ClaimEventPresenter
-import WelcomeProps = State.WelcomeProps
+import ClaimEventPresenter = State.ClaimEventPresenter;
+import WelcomeProps = State.WelcomeProps;
