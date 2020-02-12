@@ -62,4 +62,5 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.react.camelize_props = true
+  config.middleware.delete Rack::Attack
 end
