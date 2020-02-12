@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import ClaimEventForm from "./ClaimEventForm";
 import ClaimEvent from "./ClaimEvent";
 import axios from "axios";
+import { Container, Row, Col } from "react-bootstrap";
+import CKbIcon from "../images/ckb-n.png";
 
 const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
   const [state, setState] = useState({
@@ -47,14 +49,43 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
 
   return (
     <React.Fragment>
-      {/* Header */}
-      <ClaimEventForm
-        address_hash={address_hash}
-        handleInput={handleInput}
-        handleSubmit={handleSubmit}
-      ></ClaimEventForm>
+      <Container className="form-container" fluid>
+        <Row className="justify-content-center align-items-center">
+          <Col
+            xs="12"
+            md="8"
+            lg="6"
+            className="align-self-center justify-content-center img-container"
+          >
+            <img src={CKbIcon} alt="" />
+          </Col>
+        </Row>
+        <Row className="justify-content-center align-items-center">
+          <Col
+            xs="12"
+            md="8"
+            lg="6"
+            className="justify-content-center content-container"
+          >
+            <h1>Nervos Aggron Faucet</h1>
+          </Col>
+        </Row>
+        <Row className="justify-content-center align-items-center">
+          <Col
+            xs="12"
+            md="8"
+            lg="6"
+            className=" justify-content-center align-self-center"
+          >
+            <ClaimEventForm
+              address_hash={address_hash}
+              handleInput={handleInput}
+              handleSubmit={handleSubmit}
+            ></ClaimEventForm>
+          </Col>
+        </Row>
+      </Container>
       <ClaimEvent claimEvents={claimEvents}></ClaimEvent>
-      {/* Footer */}
     </React.Fragment>
   );
 };
