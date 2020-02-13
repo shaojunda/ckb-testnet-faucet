@@ -44,6 +44,8 @@ gem "rack-attack"
 gem "mina", require: false
 gem "mina-multistage", require: false
 
+gem "whenever", require: false
+
 group :development, :test do
   gem "pry"
   gem "pry-nav"
