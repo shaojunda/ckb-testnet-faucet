@@ -9,7 +9,7 @@ class SendCapacityServiceTest < ActiveSupport::TestCase
     first_pending_event = ClaimEvent.order(:id).pending.first
     tx_hash = "0x1deb37a41c037919d8b0bbce6e7ac19fb00b7e12f0cacff369acd416369e72d9"
     ckb_wallet = mock
-    ckb_wallet.expects(:send_capacity).with(first_pending_event.address_hash, ClaimEvent::DEFAULT_CLAIM_CAPACITY).returns(tx_hash)
+    ckb_wallet.expects(:send_capacity).with(first_pending_event.address_hash, ClaimEvent::DEFAULT_CLAIM_CAPACITY, fee: ClaimEvent::DEFAULT_TRANSACTION_FEE).returns(tx_hash)
 
     assert_changes -> { first_pending_event.reload.tx_hash }, from: nil, to: tx_hash do
       SendCapacityService.new(ckb_wallet).call
@@ -22,7 +22,7 @@ class SendCapacityServiceTest < ActiveSupport::TestCase
     first_pending_event = ClaimEvent.order(:id).pending.first
     tx_hash = "0x1deb37a41c037919d8b0bbce6e7ac19fb00b7e12f0cacff369acd416369e72d9"
     ckb_wallet = mock
-    ckb_wallet.expects(:send_capacity).with(first_pending_event.address_hash, ClaimEvent::DEFAULT_CLAIM_CAPACITY).returns(tx_hash)
+    ckb_wallet.expects(:send_capacity).with(first_pending_event.address_hash, ClaimEvent::DEFAULT_CLAIM_CAPACITY, fee: ClaimEvent::DEFAULT_TRANSACTION_FEE).returns(tx_hash)
 
     SendCapacityService.new(ckb_wallet).call
 
@@ -37,7 +37,7 @@ class SendCapacityServiceTest < ActiveSupport::TestCase
     tx_hash = "0x1deb37a41c037919d8b0bbce6e7ac19fb00b7e12f0cacff369acd416369e72d9"
     first_pending_event.update(tx_hash: tx_hash)
     ckb_wallet = mock
-    ckb_wallet.expects(:get_transaction).with(tx_hash).returns(OpenStruct.new(tx_status: "committed", transaction: {}))
+    ckb_wallet.expects(:get_transaction).with(tx_hash).returns(OpenStruct.new(tx_status: OpenStruct.new(status: "committed"), transaction: {}))
 
     assert_changes -> { first_pending_event.reload.status }, from: "pending", to: "processed" do
       SendCapacityService.new(ckb_wallet).call
@@ -51,7 +51,7 @@ class SendCapacityServiceTest < ActiveSupport::TestCase
     tx_hash = "0x1deb37a41c037919d8b0bbce6e7ac19fb00b7e12f0cacff369acd416369e72d9"
     first_pending_event.update(tx_hash: tx_hash)
     ckb_wallet = mock
-    ckb_wallet.expects(:get_transaction).with(tx_hash).returns(OpenStruct.new(tx_status: "committed", transaction: {}))
+    ckb_wallet.expects(:get_transaction).with(tx_hash).returns(OpenStruct.new(tx_status: OpenStruct.new(status: "committed"), transaction: {}))
 
     assert_changes -> { first_pending_event.reload.tx_status }, from: "pending", to: "committed" do
       SendCapacityService.new(ckb_wallet).call
@@ -65,7 +65,7 @@ class SendCapacityServiceTest < ActiveSupport::TestCase
     tx_hash = "0x1deb37a41c037919d8b0bbce6e7ac19fb00b7e12f0cacff369acd416369e72d9"
     first_pending_event.update(tx_hash: tx_hash)
     ckb_wallet = mock
-    ckb_wallet.expects(:get_transaction).with(tx_hash).returns(OpenStruct.new(tx_status: "proposed", transaction: {}))
+    ckb_wallet.expects(:get_transaction).with(tx_hash).returns(OpenStruct.new(tx_status: OpenStruct.new(status: "proposed"), transaction: {}))
 
     assert_changes -> { first_pending_event.reload.tx_status }, from: "pending", to: "proposed" do
       SendCapacityService.new(ckb_wallet).call
@@ -81,9 +81,24 @@ class SendCapacityServiceTest < ActiveSupport::TestCase
     first_pending_event.update(tx_hash: tx_hash)
     ckb_wallet = mock
     ckb_wallet.expects(:get_transaction).with(tx_hash).returns(nil)
-    ckb_wallet.expects(:send_capacity).with(first_pending_event.address_hash, ClaimEvent::DEFAULT_CLAIM_CAPACITY).returns(new_tx_hash)
+    ckb_wallet.expects(:send_capacity).with(first_pending_event.address_hash, ClaimEvent::DEFAULT_CLAIM_CAPACITY, fee: ClaimEvent::DEFAULT_TRANSACTION_FEE).returns(new_tx_hash)
 
     assert_changes -> { first_pending_event.reload.tx_hash }, from: tx_hash, to: new_tx_hash do
+      SendCapacityService.new(ckb_wallet).call
+    end
+  end
+
+  test "should update official account balance when claim event committed" do
+    create_list(:claim_event, 2)
+    create_list(:claim_event, 2, status: "processed")
+    create(:account)
+    first_pending_event = ClaimEvent.order(:id).pending.first
+    tx_hash = "0x1deb37a41c037919d8b0bbce6e7ac19fb00b7e12f0cacff369acd416369e72d9"
+    first_pending_event.update(tx_hash: tx_hash)
+    ckb_wallet = mock
+    ckb_wallet.expects(:get_transaction).with(tx_hash).returns(OpenStruct.new(tx_status: OpenStruct.new(status: "committed"), transaction: {}))
+
+    assert_difference -> { Account.official_account.balance }, -first_pending_event.capacity do
       SendCapacityService.new(ckb_wallet).call
     end
   end
