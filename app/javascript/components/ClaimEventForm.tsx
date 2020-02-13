@@ -5,15 +5,18 @@ interface ClaimEventFormProps {
   address_hash: string;
   handleInput: React.ChangeEventHandler<HTMLInputElement>;
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
+  formError: string | null;
 }
 
 const ClaimEventForm: React.FC<ClaimEventFormProps> = ({
   address_hash,
   handleInput,
-  handleSubmit
+  handleSubmit,
+  formError
 }) => {
+  const defaultFormError = "please enter your address";
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form noValidate onSubmit={handleSubmit}>
       <InputGroup className="mb-3">
         <FormControl
           placeholder="Enter your Aggron wallet address"
@@ -22,12 +25,16 @@ const ClaimEventForm: React.FC<ClaimEventFormProps> = ({
           name="address_hash"
           value={address_hash}
           onChange={handleInput}
+          className={formError !== "" ? "is-invalid" : ""}
         />
         <InputGroup.Append>
           <Button variant="outline-light" type="submit">
             Claim
           </Button>
         </InputGroup.Append>
+        <Form.Control.Feedback type="invalid">
+          {formError || defaultFormError}
+        </Form.Control.Feedback>
       </InputGroup>
     </Form>
   );

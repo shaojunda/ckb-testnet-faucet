@@ -5,10 +5,11 @@ import axios from "axios";
 import { Container, Row, Col } from "react-bootstrap";
 import CKbIcon from "../images/ckb-n.png";
 
-const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
+const Welcome: React.FC<WelcomeProps> = ({ claimEvents }) => {
   const [state, setState] = useState({
     claimEvents: claimEvents,
-    address_hash: address_hash
+    address_hash: "",
+    formError: ""
   });
 
   const handleInput: React.ChangeEventHandler<HTMLInputElement> = (
@@ -25,6 +26,15 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (
     event: React.FormEvent<HTMLFormElement>
   ) => {
+    const form = event.currentTarget;
+    const addressInput = form.elements[0] as HTMLInputElement;
+    if (addressInput.value === "" && addressInput.value.trim().length < 40) {
+      setState({ ...state, formError: "Address is invalid." });
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     const csrfObj: HTMLMetaElement | null = document.querySelector(
       "meta[name=csrf-token]"
     );
@@ -41,7 +51,10 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
         console.log(response.data);
       })
       .catch(error => {
-        console.log(error);
+        setState({
+          ...state,
+          formError: error.response.data["address_hash"][0]
+        });
       });
 
     event.preventDefault();
@@ -92,9 +105,10 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, address_hash }) => {
             className=" justify-content-center align-self-center"
           >
             <ClaimEventForm
-              address_hash={address_hash}
+              address_hash={state.address_hash}
               handleInput={handleInput}
               handleSubmit={handleSubmit}
+              formError={state.formError}
             ></ClaimEventForm>
           </Col>
         </Row>
