@@ -2,6 +2,7 @@
 
 class WelcomeController < ApplicationController
   def index
-    render component: "Welcome"
+    account = Account.first
+    render component: "Welcome", props: { officialAccount: { address_hash: account.address_hash, balance: account.balance } }
   end
 end

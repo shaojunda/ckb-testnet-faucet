@@ -5,11 +5,15 @@ import axios from "axios";
 import { Container, Row, Col } from "react-bootstrap";
 import CKbIcon from "../images/ckb-n.png";
 
-const Welcome: React.FC<WelcomeProps> = ({ claimEvents }) => {
+const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
   const [state, setState] = useState({
     claimEvents: claimEvents,
     address_hash: "",
-    formError: ""
+    formError: "",
+    officialAccount: {
+      address_hash: officialAccount.address_hash,
+      balance: officialAccount.balance
+    }
   });
 
   const handleInput: React.ChangeEventHandler<HTMLInputElement> = (
@@ -120,7 +124,11 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents }) => {
             xl="4"
             className="justify-content-center content-container"
           >
-            <p>Faucet address balance is 10000000000 CKB</p>
+            <p>
+              Faucet address balance is{" "}
+              {Number(officialAccount.balance).toLocaleString("en")}
+              &nbsp; CKB
+            </p>
           </Col>
         </Row>
       </Container>

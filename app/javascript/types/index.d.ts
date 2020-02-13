@@ -8,9 +8,15 @@ declare namespace State {
     fee: string;
   }
 
+  export interface Account {
+    address_hash: string;
+    balance: string;
+  }
+
   export interface WelcomeProps {
     claimEvents: Array<ClaimEventPresenter>;
     address_hash: string;
+    officialAccount: Account;
   }
 }
 declare module "*.png" {
