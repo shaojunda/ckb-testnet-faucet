@@ -32,6 +32,7 @@ class SendCapacityService
       if tx.tx_status.status == "committed"
         first_pending_event.processed!
         first_pending_event.update!(tx_status: tx.tx_status.status)
+        Account.official_account.decrement!(:balance, first_pending_event.capacity)
       else
         first_pending_event.update!(tx_status: tx.tx_status.status)
       end

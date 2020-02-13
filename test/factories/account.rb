@@ -7,6 +7,6 @@ FactoryBot.define do
 
       CKB::Address.new(script, mode: CKB::MODE::TESTNET).generate
     end
-    balance { Faker::Number.number(digits: 10) }
+    balance { 10_000_000 * 10**8 }
   end
 end

@@ -53,6 +53,10 @@ class ActiveSupport::TestCase
     DatabaseCleaner.start
   end
 
+  def setup
+    create(:account)
+  end
+
   def after_teardown
     super
     DatabaseCleaner.clean
