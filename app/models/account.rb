@@ -7,6 +7,10 @@ class Account < ApplicationRecord
   def self.official_account
     first
   end
+
+  def ckb_balance
+    (BigDecimal(balance) / 10**8).round(2)
+  end
 end
 
 # == Schema Information
