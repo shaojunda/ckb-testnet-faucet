@@ -52,7 +52,7 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
       }
     })
       .then(response => {
-        console.log(response.data);
+        setState({ ...state, formError: "" });
       })
       .catch(error => {
         setState({
