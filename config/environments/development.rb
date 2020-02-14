@@ -27,7 +27,7 @@ Rails.application.configure do
   else
     config.action_controller.perform_caching = false
 
-    config.cache_store = :null_store
+    config.cache_store = :redis_cache_store, { url: "#{Rails.application.credentials.REDIS[:URL]}/cache" }
   end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
@@ -62,5 +62,5 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.react.camelize_props = true
-  config.middleware.delete Rack::Attack
+  # config.middleware.delete Rack::Attack
 end

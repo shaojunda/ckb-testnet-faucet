@@ -56,8 +56,8 @@ Rails.application.configure do
   config.log_tags = [ :request_id ]
 
   # Use a different cache store in production.
-  config.cache_store = :redis_cache_store, { url: ENV["REDIS_URL"], password: ENV["REDIS_PASSWORD"] }
-  config.session_store :redis_store, key: "_ckb_faucet_session", expire_after: ENV["SESSION_EXPIRE"].to_i.minutes
+  config.cache_store = :redis_cache_store, { url: "#{Rails.application.credentials.REDIS[:URL]}/cache", password: Rails.application.credentials.REDIS[:PASSWORD] }
+  config.session_store :redis_store, key: "_ckb_faucet_session", expire_after: Rails.application.credentials.SESSION_EXPIRE.to_i.minutes
   config.assets.cache_store = :redis_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).

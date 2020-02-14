@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class Rack::Attack
+  class Request < ::Rack::Request
+    def remote_ip
+      # Cloudflare stores remote IP in CF_CONNECTING_IP header
+      @remote_ip ||= (env["HTTP_CF_CONNECTING_IP"] ||
+                      env["action_dispatch.remote_ip"] ||
+                      ip).to_s
+    end
+  end
   ### Configure Cache ###
 
   # If you don't want to use Rails.cache (Rack::Attack's default), then
@@ -27,7 +35,7 @@ class Rack::Attack
   # Key: "rack::attack:#{Time.now.to_i/:period}:req/ip:#{req.ip}"
   throttle("req/ip", limit: 10, period: 10.seconds) do |req|
     if req.path == "/claim_events" && req.post?
-      req.ip
+      req.remote_ip
     end
   end
 
