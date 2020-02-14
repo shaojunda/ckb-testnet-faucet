@@ -29,6 +29,8 @@ class SendCapacityService
     attr_reader :ckb_wallet
 
     def handle_state_change(first_pending_event, tx)
+      return if tx.tx_status.status == "pending"
+
       if tx.tx_status.status == "committed"
         first_pending_event.processed!
         first_pending_event.update!(tx_status: tx.tx_status.status)
