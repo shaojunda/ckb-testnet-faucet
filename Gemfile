@@ -45,6 +45,7 @@ gem "mina", require: false
 gem "mina-multistage", require: false
 
 gem "whenever", require: false
+gem "fast_jsonapi"
 
 group :development, :test do
   gem "pry"
