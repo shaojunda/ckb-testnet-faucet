@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import ClaimEventForm from "./ClaimEventForm";
-import ClaimEvent from "./ClaimEvent";
+import ClaimEventList from "./ClaimEventList";
 import axios from "axios";
 import { Container, Row, Col } from "react-bootstrap";
 import CKbIcon from "../images/ckb-n.png";
 
 const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
   const [state, setState] = useState({
-    claimEvents: claimEvents,
-    address_hash: "",
+    claimEvents: claimEvents.data.map(event => {
+      return event.attributes;
+    }),
+    addressHash: "",
     formError: "",
     officialAccount: {
-      address_hash: officialAccount.address_hash,
+      addressHash: officialAccount.addressHash,
       balance: officialAccount.balance
     }
   });
@@ -22,7 +24,7 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
     const target = event.target as HTMLInputElement;
     setState({
       ...state,
-      address_hash: target.value
+      addressHash: target.value
     });
     event.preventDefault();
   };
@@ -46,7 +48,7 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
     axios({
       method: "POST",
       url: "/claim_events",
-      data: { claim_event: { address_hash: state.address_hash } },
+      data: { claim_event: { address_hash: state.addressHash } },
       headers: {
         "X-CSRF-Token": csrfToken
       }
@@ -109,7 +111,7 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
             className=" justify-content-center align-self-center"
           >
             <ClaimEventForm
-              address_hash={state.address_hash}
+              addressHash={state.addressHash}
               handleInput={handleInput}
               handleSubmit={handleSubmit}
               formError={state.formError}
@@ -132,7 +134,13 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
           </Col>
         </Row>
       </Container>
-      <ClaimEvent claimEvents={claimEvents}></ClaimEvent>
+      <Container className="claim-event-list-container">
+        <Row className="justify-content-center align-items-center">
+          <Col xs="12" lg="9" xl="12">
+            <ClaimEventList claimEvents={state.claimEvents}></ClaimEventList>
+          </Col>
+        </Row>
+      </Container>
     </React.Fragment>
   );
 };

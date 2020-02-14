@@ -2,14 +2,14 @@ import React from "react";
 import { Button, InputGroup, FormControl, Form } from "react-bootstrap";
 
 interface ClaimEventFormProps {
-  address_hash: string;
+  addressHash: string;
   handleInput: React.ChangeEventHandler<HTMLInputElement>;
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
   formError: string | null;
 }
 
 const ClaimEventForm: React.FC<ClaimEventFormProps> = ({
-  address_hash,
+  addressHash,
   handleInput,
   handleSubmit,
   formError
@@ -23,7 +23,7 @@ const ClaimEventForm: React.FC<ClaimEventFormProps> = ({
           aria-label="Aggron address"
           aria-describedby="Enter your Aggron wallet address"
           name="address_hash"
-          value={address_hash}
+          value={addressHash}
           onChange={handleInput}
           className={formError !== "" ? "is-invalid" : ""}
         />

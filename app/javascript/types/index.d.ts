@@ -1,22 +1,37 @@
 declare namespace State {
+  export interface Response {
+    data: Array<ResponseData>;
+  }
+
+  export interface ResponseData {
+    id: string;
+    type: string;
+    attributes: ClaimEventPresenter;
+  }
   export interface ClaimEventPresenter {
-    tx_hash: string;
+    id: string;
+    txHash: string;
     timestamp: string;
-    address_hash: string;
+    addressHash: string;
     status: string;
+    txStatus: string;
     capacity: string;
     fee: string;
   }
 
   export interface Account {
-    address_hash: string;
+    addressHash: string;
     balance: string;
   }
 
   export interface WelcomeProps {
-    claimEvents: Array<ClaimEventPresenter>;
-    address_hash: string;
+    claimEvents: Response;
+    addressHash: string;
     officialAccount: Account;
+  }
+
+  export interface ClaimEventListProps {
+    claimEvents: Array<ClaimEventPresenter>;
   }
 }
 declare module "*.png" {
@@ -25,4 +40,5 @@ declare module "*.png" {
 }
 
 import ClaimEventPresenter = State.ClaimEventPresenter;
+import ClaimEventListProps = State.ClaimEventListProps;
 import WelcomeProps = State.WelcomeProps;
