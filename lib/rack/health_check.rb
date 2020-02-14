@@ -3,6 +3,9 @@
 module Rack
   class  HealthCheck
     def call(env)
+      req = Rack::Request.new(env)
+      return [401, { "Content-Type" => "application/json" }, ["Ip Address not allowed"]] unless allowed_ip?(req.ip)
+
       status = {
         redis: {
           connected: redis_connected?
@@ -47,6 +50,11 @@ module Rack
 
       def rpc_connected?
         CKB::API.new(host: Rails.application.credentials.CKB_NODE_URL).present? rescue false
+      end
+
+      def allowed_ip?(remote_ip)
+        allowed_ips = ["127.0.0.1", "::1"].concat(Rails.application.credentials.ALLOWED_IPS || [])
+        allowed_ips.include?(remote_ip)
       end
   end
 end
