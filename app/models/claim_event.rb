@@ -10,6 +10,7 @@ class ClaimEvent < ApplicationRecord
   validates_with ClaimEventValidator, on: :create
 
   scope :daily, -> { where("created_at_unixtimestamp >= ? and created_at_unixtimestamp <= ?", Time.current.beginning_of_day.to_i, Time.current.end_of_day.to_i) }
+  scope :recent, -> { order(id: :desc) }
 end
 
 # == Schema Information
