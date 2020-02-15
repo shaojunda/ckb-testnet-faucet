@@ -26,6 +26,7 @@ const ClaimEventForm: React.FC<ClaimEventFormProps> = ({
           value={addressHash}
           onChange={handleInput}
           className={formError !== "" ? "is-invalid" : ""}
+          autoFocus
         />
         <InputGroup.Append>
           <Button variant="outline-light" type="submit">
