@@ -5,3 +5,28 @@
 .hash-letter {
   font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
 }
+
+.claim-event-list-container .card {
+  .card-header {
+    font-size: 0.9rem;
+  }
+  margin-top: 13px;
+
+  .row:not(:last-child) {
+    margin-bottom: 10px;
+  }
+  a {
+    color: rgb(97, 123, 189);
+    text-decoration: none;
+  }
+  span.timestamp {
+    color: rgb(136, 136, 136);
+  }
+  span.tx-fee {
+    font-size: 0.8rem;
+    color: rgb(136, 136, 136);
+  }
+  span.has-tooltip {
+    cursor: default;
+  }
+}
