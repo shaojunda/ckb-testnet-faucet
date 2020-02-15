@@ -143,10 +143,16 @@ const Welcome: React.FC<WelcomeProps> = ({
         <Container className="claim-event-list-container">
           <Row className="justify-content-center align-items-center">
             <Col xs="12" md="12" lg="10" xl="10">
-              <ClaimEventList
-                claimEvents={state.claimEvents}
-                aggronExplorerHost={aggronExplorerHost}
-              ></ClaimEventList>
+              {state.claimEvents.length == 0 ? (
+                <div className="text-center">
+                  <h1>No Claim Yet</h1>
+                </div>
+              ) : (
+                <ClaimEventList
+                  claimEvents={state.claimEvents}
+                  aggronExplorerHost={aggronExplorerHost}
+                ></ClaimEventList>
+              )}
             </Col>
           </Row>
         </Container>

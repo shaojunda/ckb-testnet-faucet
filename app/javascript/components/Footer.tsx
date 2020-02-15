@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
     return new Date().getFullYear();
   };
   return (
-    <Navbar sticky="bottom" className="footer">
+    <Navbar fixed="bottom" className="footer">
       <p>{`Copyright © ${getCurrentYear()} Nervos Foundation. All Rights Reserved.`}</p>
     </Navbar>
   );
