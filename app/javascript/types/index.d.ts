@@ -35,6 +35,10 @@ declare namespace State {
     claimEvents: Array<ClaimEventPresenter>;
     aggronExplorerHost: string;
   }
+
+  export interface ClaimEventProps {
+    claimEvent: ClaimEventPresenter;
+  }
 }
 declare module "*.png" {
   const value: any;
@@ -43,4 +47,5 @@ declare module "*.png" {
 
 import ClaimEventPresenter = State.ClaimEventPresenter;
 import ClaimEventListProps = State.ClaimEventListProps;
+import ClaimEventProps = State.ClaimEventProps;
 import WelcomeProps = State.WelcomeProps;

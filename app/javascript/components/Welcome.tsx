@@ -4,6 +4,7 @@ import ClaimEventList from "./ClaimEventList";
 import axios from "axios";
 import { Container, Row, Col } from "react-bootstrap";
 import CKbIcon from "../images/ckb-n.png";
+import { context } from "../utils/util";
 
 const Welcome: React.FC<WelcomeProps> = ({
   claimEvents,
@@ -71,84 +72,86 @@ const Welcome: React.FC<WelcomeProps> = ({
   };
 
   return (
-    <React.Fragment>
-      <Container className="form-container" fluid>
-        <Row className="justify-content-center align-items-center">
-          <Col
-            xs="10"
-            md="8"
-            lg="6"
-            xl="5"
-            className="align-self-center justify-content-center img-container"
-          >
-            <img src={CKbIcon} alt="" />
-          </Col>
-        </Row>
-        <Row className="justify-content-center align-items-center">
-          <Col
-            xs="11"
-            md="8"
-            lg="6"
-            xl="5"
-            className="justify-content-center content-container"
-          >
-            <h1>Nervos Aggron Faucet</h1>
-          </Col>
-        </Row>
-        <Row className="justify-content-center align-items-center">
-          <Col
-            xs="10"
-            md="8"
-            lg="6"
-            xl="5"
-            className="justify-content-center content-container"
-          >
-            <p>Claim testnet 50000 CKB from the faucet once every 8 hours</p>
-          </Col>
-        </Row>
-        <Row className="justify-content-center align-items-center">
-          <Col
-            xs="10"
-            md="8"
-            lg="6"
-            xl="4"
-            className=" justify-content-center align-self-center"
-          >
-            <ClaimEventForm
-              addressHash={state.addressHash}
-              handleInput={handleInput}
-              handleSubmit={handleSubmit}
-              formError={state.formError}
-            ></ClaimEventForm>
-          </Col>
-        </Row>
-        <Row className="justify-content-center align-items-center">
-          <Col
-            xs="10"
-            md="8"
-            lg="6"
-            xl="5"
-            className="justify-content-center content-container"
-          >
-            <p>
-              Faucet address balance is{" "}
-              {Number(officialAccount.balance).toLocaleString("en")}
-              &nbsp; CKB
-            </p>
-          </Col>
-        </Row>
-      </Container>
-      <Container className="claim-event-list-container">
-        <Row className="justify-content-center align-items-center">
-          <Col xs="12" md="12" lg="10" xl="10">
-            <ClaimEventList
-              claimEvents={state.claimEvents}
-              aggronExplorerHost={aggronExplorerHost}
-            ></ClaimEventList>
-          </Col>
-        </Row>
-      </Container>
-    </React.Fragment>
+    <context.Provider value={aggronExplorerHost}>
+      <React.Fragment>
+        <Container className="form-container" fluid>
+          <Row className="justify-content-center align-items-center">
+            <Col
+              xs="10"
+              md="8"
+              lg="6"
+              xl="5"
+              className="align-self-center justify-content-center img-container"
+            >
+              <img src={CKbIcon} alt="" />
+            </Col>
+          </Row>
+          <Row className="justify-content-center align-items-center">
+            <Col
+              xs="11"
+              md="8"
+              lg="6"
+              xl="5"
+              className="justify-content-center content-container"
+            >
+              <h1>Nervos Aggron Faucet</h1>
+            </Col>
+          </Row>
+          <Row className="justify-content-center align-items-center">
+            <Col
+              xs="10"
+              md="8"
+              lg="6"
+              xl="5"
+              className="justify-content-center content-container"
+            >
+              <p>Claim testnet 50000 CKB from the faucet once every 8 hours</p>
+            </Col>
+          </Row>
+          <Row className="justify-content-center align-items-center">
+            <Col
+              xs="10"
+              md="8"
+              lg="6"
+              xl="4"
+              className=" justify-content-center align-self-center"
+            >
+              <ClaimEventForm
+                addressHash={state.addressHash}
+                handleInput={handleInput}
+                handleSubmit={handleSubmit}
+                formError={state.formError}
+              ></ClaimEventForm>
+            </Col>
+          </Row>
+          <Row className="justify-content-center align-items-center">
+            <Col
+              xs="10"
+              md="8"
+              lg="6"
+              xl="5"
+              className="justify-content-center content-container"
+            >
+              <p>
+                Faucet address balance is{" "}
+                {Number(officialAccount.balance).toLocaleString("en")}
+                &nbsp; CKB
+              </p>
+            </Col>
+          </Row>
+        </Container>
+        <Container className="claim-event-list-container">
+          <Row className="justify-content-center align-items-center">
+            <Col xs="12" md="12" lg="10" xl="10">
+              <ClaimEventList
+                claimEvents={state.claimEvents}
+                aggronExplorerHost={aggronExplorerHost}
+              ></ClaimEventList>
+            </Col>
+          </Row>
+        </Container>
+      </React.Fragment>
+    </context.Provider>
   );
 };
 
