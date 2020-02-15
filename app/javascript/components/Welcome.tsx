@@ -5,7 +5,11 @@ import axios from "axios";
 import { Container, Row, Col } from "react-bootstrap";
 import CKbIcon from "../images/ckb-n.png";
 
-const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
+const Welcome: React.FC<WelcomeProps> = ({
+  claimEvents,
+  officialAccount,
+  aggronExplorerHost
+}) => {
   const [state, setState] = useState({
     claimEvents: claimEvents.data.map(event => {
       return event.attributes;
@@ -71,10 +75,10 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
       <Container className="form-container" fluid>
         <Row className="justify-content-center align-items-center">
           <Col
-            xs="12"
+            xs="10"
             md="8"
             lg="6"
-            xl="4"
+            xl="5"
             className="align-self-center justify-content-center img-container"
           >
             <img src={CKbIcon} alt="" />
@@ -82,10 +86,10 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
         </Row>
         <Row className="justify-content-center align-items-center">
           <Col
-            xs="12"
+            xs="11"
             md="8"
             lg="6"
-            xl="4"
+            xl="5"
             className="justify-content-center content-container"
           >
             <h1>Nervos Aggron Faucet</h1>
@@ -93,10 +97,10 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
         </Row>
         <Row className="justify-content-center align-items-center">
           <Col
-            xs="12"
+            xs="10"
             md="8"
             lg="6"
-            xl="4"
+            xl="5"
             className="justify-content-center content-container"
           >
             <p>Claim testnet 50000 CKB from the faucet once every 8 hours</p>
@@ -104,7 +108,7 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
         </Row>
         <Row className="justify-content-center align-items-center">
           <Col
-            xs="12"
+            xs="10"
             md="8"
             lg="6"
             xl="4"
@@ -120,10 +124,10 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
         </Row>
         <Row className="justify-content-center align-items-center">
           <Col
-            xs="12"
+            xs="10"
             md="8"
             lg="6"
-            xl="4"
+            xl="5"
             className="justify-content-center content-container"
           >
             <p>
@@ -136,8 +140,11 @@ const Welcome: React.FC<WelcomeProps> = ({ claimEvents, officialAccount }) => {
       </Container>
       <Container className="claim-event-list-container">
         <Row className="justify-content-center align-items-center">
-          <Col xs="12" lg="9" xl="12">
-            <ClaimEventList claimEvents={state.claimEvents}></ClaimEventList>
+          <Col xs="12" md="12" lg="10" xl="10">
+            <ClaimEventList
+              claimEvents={state.claimEvents}
+              aggronExplorerHost={aggronExplorerHost}
+            ></ClaimEventList>
           </Col>
         </Row>
       </Container>

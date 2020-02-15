@@ -28,10 +28,12 @@ declare namespace State {
     claimEvents: Response;
     addressHash: string;
     officialAccount: Account;
+    aggronExplorerHost: string;
   }
 
   export interface ClaimEventListProps {
     claimEvents: Array<ClaimEventPresenter>;
+    aggronExplorerHost: string;
   }
 }
 declare module "*.png" {
