@@ -41,7 +41,7 @@ class SendCapacityService
     end
 
     def handle_send_capacity(first_pending_event)
-      tx_hash = ckb_wallet.send_capacity(first_pending_event.address_hash, first_pending_event.capacity, fee: ClaimEvent::DEFAULT_TRANSACTION_FEE)
+      tx_hash = ckb_wallet.send_capacity(first_pending_event.address_hash, first_pending_event.capacity, fee: ClaimEvent::DEFAULT_TRANSACTION_FEE, outputs_validator: "passthrough")
       first_pending_event.update!(tx_hash: tx_hash, tx_status: "pending", fee: ClaimEvent::DEFAULT_TRANSACTION_FEE)
     end
 end
