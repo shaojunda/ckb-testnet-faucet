@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ClaimEventForm from "./ClaimEventForm";
 import ClaimEventList from "./ClaimEventList";
 import axios from "axios";
@@ -152,15 +152,19 @@ const Welcome: React.FC<WelcomeProps> = ({
           </Row>
         </Container>
         <Container className="claim-event-list-container">
-          <Row>
-            <Col>
-              <h2>Claims</h2>
-            </Col>
-          </Row>
+          {state.claimEvents.length > 0 ? (
+            <Row className="justify-content-center align-items-center">
+              <Col xs="12" md="12" lg="10" xl="10">
+                <h2>Claims</h2>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
           <Row className="justify-content-center align-items-center">
             <Col xs="12" md="12" lg="10" xl="10">
               {state.claimEvents.length == 0 ? (
-                <div className="text-center">
+                <div className="justify-content-center align-items-center empty-records d-flex">
                   <h1>No Claim Yet</h1>
                 </div>
               ) : (

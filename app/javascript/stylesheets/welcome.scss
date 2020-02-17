@@ -47,6 +47,14 @@ form div.invalid-feedback {
   h1 {
     color: #bababa;
   }
+  .empty-records {
+    min-height: 610px;
+  }
+  @media only screen and (max-height: 1024px) {
+    .empty-records {
+      min-height: 213px;
+    }
+  }
   @media only screen and (max-width: 700px) {
     h2 {
       font-size: 1.5rem;
