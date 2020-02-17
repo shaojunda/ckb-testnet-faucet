@@ -37,7 +37,8 @@ set :shared_dirs, fetch(:shared_dirs, []).push(
 set :shared_files, fetch(:shared_files, []).push(
   "config/database.yml",
   "config/puma.rb",
-  "config/master.key"
+  "config/master.key",
+  "config/credentials/production.key"
 )
 
 set :force_asset_precompile, true
@@ -80,7 +81,7 @@ task :deploy do
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 
-    on :launch do
+    on launch: :remote_environment do
       in_path(fetch(:current_path)) do
         command "sudo systemctl restart ckb-explorer-puma.socket ckb-explorer-puma.service"
         command "sudo systemctl restart claim_event_processor.service"
