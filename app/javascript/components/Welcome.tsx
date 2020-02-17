@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ClaimEventForm from "./ClaimEventForm";
 import ClaimEventList from "./ClaimEventList";
 import axios from "axios";
@@ -11,11 +11,11 @@ const Welcome: React.FC<WelcomeProps> = ({
   officialAccount,
   aggronExplorerHost
 }) => {
+  const addressHash = useRef("");
   const [state, setState] = useState({
     claimEvents: claimEvents.data.map(event => {
       return event.attributes;
     }),
-    addressHash: "",
     formError: "",
     officialAccount: {
       addressHash: officialAccount.addressHash,
@@ -32,9 +32,12 @@ const Welcome: React.FC<WelcomeProps> = ({
         .then(response => {
           setState({
             ...state,
-            claimEvents: response.data.data.map((event: ResponseData) => {
-              return event.attributes;
-            })
+            officialAccount: response.data.official_account,
+            claimEvents: response.data.claimEvents.data.map(
+              (event: ResponseData) => {
+                return event.attributes;
+              }
+            )
           });
         })
         .catch(error => {});
@@ -51,7 +54,6 @@ const Welcome: React.FC<WelcomeProps> = ({
     });
     setState({
       ...state,
-      addressHash: "",
       claimEvents: claimEvents
     });
   };
@@ -60,9 +62,10 @@ const Welcome: React.FC<WelcomeProps> = ({
     event: React.FormEvent<HTMLInputElement>
   ) => {
     const target = event.target as HTMLInputElement;
+    addressHash.current = target.value;
     setState({
       ...state,
-      addressHash: target.value
+      formError: ""
     });
     event.preventDefault();
   };
@@ -86,7 +89,7 @@ const Welcome: React.FC<WelcomeProps> = ({
     axios({
       method: "POST",
       url: "/claim_events",
-      data: { claim_event: { address_hash: state.addressHash } },
+      data: { claim_event: { address_hash: addressHash.current } },
       headers: {
         "X-CSRF-Token": csrfToken
       }
@@ -150,7 +153,7 @@ const Welcome: React.FC<WelcomeProps> = ({
               className=" justify-content-center align-self-center"
             >
               <ClaimEventForm
-                addressHash={state.addressHash}
+                addressHash={addressHash.current}
                 handleInput={handleInput}
                 handleSubmit={handleSubmit}
                 formError={state.formError}
@@ -167,7 +170,7 @@ const Welcome: React.FC<WelcomeProps> = ({
             >
               <p>
                 Faucet address balance is{" "}
-                {Number(officialAccount.balance).toLocaleString("en")}
+                {Number(state.officialAccount.balance).toLocaleString("en")}
                 &nbsp; CKB
               </p>
             </Col>

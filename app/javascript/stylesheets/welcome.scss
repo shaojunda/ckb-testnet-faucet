@@ -44,16 +44,13 @@ form div.invalid-feedback {
 
 .claim-event-list-container {
   margin-top: 20px;
+  min-height: 610px;
   h1 {
     color: #bababa;
   }
-  .empty-records {
-    min-height: 610px;
-  }
+
   @media only screen and (max-height: 1024px) {
-    .empty-records {
-      min-height: 213px;
-    }
+    min-height: 213px;
   }
   @media only screen and (max-width: 700px) {
     h2 {
