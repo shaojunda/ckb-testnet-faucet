@@ -152,6 +152,11 @@ const Welcome: React.FC<WelcomeProps> = ({
           </Row>
         </Container>
         <Container className="claim-event-list-container">
+          <Row>
+            <Col>
+              <h2>Claims</h2>
+            </Col>
+          </Row>
           <Row className="justify-content-center align-items-center">
             <Col xs="12" md="12" lg="10" xl="10">
               {state.claimEvents.length == 0 ? (
