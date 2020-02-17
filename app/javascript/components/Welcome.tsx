@@ -23,6 +23,28 @@ const Welcome: React.FC<WelcomeProps> = ({
     }
   });
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      axios({
+        method: "GET",
+        url: "/claim_events"
+      })
+        .then(response => {
+          setState({
+            ...state,
+            claimEvents: response.data.data.map((event: ResponseData) => {
+              return event.attributes;
+            })
+          });
+        })
+        .catch(error => {});
+    }, 5000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [state.claimEvents]);
+
   const addNewEvent = (claimEvent: ClaimEventPresenter) => {
     const claimEvents = [claimEvent, ...state.claimEvents].sort((a, b) => {
       return +new Date(b.timestamp) - +new Date(a.timestamp);
