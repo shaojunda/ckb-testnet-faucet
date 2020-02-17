@@ -86,4 +86,14 @@ class ClaimEventsControllerTest < ActionDispatch::IntegrationTest
     assert_response 422
     assert_equal "Does not support transfers to official address.", json["address_hash"].first
   end
+
+  test "should return 15 claims when visit claim event index" do
+    create_list(:claim_event, 20)
+    claim_events = ClaimEvent.recent.limit(ClaimEvent::DEFAULT_CLAIM_EVENT_SIZE)
+    get claim_events_url
+
+    assert_response 200
+    assert_equal 15, json["data"].size
+    assert_equal ClaimEventSerializer.new(claim_events).serialized_json, response.body
+  end
 end
