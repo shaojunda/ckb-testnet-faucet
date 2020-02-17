@@ -23,6 +23,17 @@ const Welcome: React.FC<WelcomeProps> = ({
     }
   });
 
+  const addNewEvent = (claimEvent: ClaimEventPresenter) => {
+    const claimEvents = [claimEvent, ...state.claimEvents].sort((a, b) => {
+      return +new Date(b.timestamp) - +new Date(a.timestamp);
+    });
+    setState({
+      ...state,
+      addressHash: "",
+      claimEvents: claimEvents
+    });
+  };
+
   const handleInput: React.ChangeEventHandler<HTMLInputElement> = (
     event: React.FormEvent<HTMLInputElement>
   ) => {
@@ -59,7 +70,7 @@ const Welcome: React.FC<WelcomeProps> = ({
       }
     })
       .then(response => {
-        setState({ ...state, formError: "" });
+        addNewEvent(response.data.data.attributes);
       })
       .catch(error => {
         setState({

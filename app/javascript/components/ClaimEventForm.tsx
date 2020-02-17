@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Button, InputGroup, FormControl, Form } from "react-bootstrap";
 
 interface ClaimEventFormProps {

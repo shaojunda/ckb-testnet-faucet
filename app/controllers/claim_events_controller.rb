@@ -6,7 +6,7 @@ class ClaimEventsController < ApplicationController
       capacity: ClaimEvent::DEFAULT_CLAIM_CAPACITY, ip_addr: request.remote_ip))
 
     if claim_event.save
-      render json: claim_event
+      render json: ClaimEventSerializer.new(claim_event).serializable_hash
     else
       render json: claim_event.errors, status: :unprocessable_entity
     end
