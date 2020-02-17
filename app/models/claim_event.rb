@@ -3,6 +3,7 @@
 class ClaimEvent < ApplicationRecord
   DEFAULT_CLAIM_CAPACITY = 5000 * 10**8
   DEFAULT_TRANSACTION_FEE = 1000
+  DEFAULT_CLAIM_EVENT_SIZE = 15
   enum status: { pending: 0, processed: 1 }
   enum tx_status: { pending: 0, proposed: 1, committed: 2 }, _prefix: :tx
 
