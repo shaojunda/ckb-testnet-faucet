@@ -57,7 +57,11 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   config.cache_store = :redis_cache_store, { url: "#{Rails.application.credentials.REDIS[:URL]}/cache", password: Rails.application.credentials.REDIS[:PASSWORD] }
+<<<<<<< HEAD
   config.assets.cache_store = :redis_cache_store
+=======
+  config.assets.cache_store = :redis_store
+>>>>>>> chore: edit production config
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
