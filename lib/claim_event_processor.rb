@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../config/environment"
 
 api = CKB::API.new(host: Rails.application.credentials.CKB_NODE_URL)
