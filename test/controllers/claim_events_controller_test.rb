@@ -19,7 +19,7 @@ class ClaimEventsControllerTest < ActionDispatch::IntegrationTest
     post claim_events_url, params: { claim_event: { address_hash: address_hash } }
 
     assert_response 422
-    assert_equal "Claim interval must be greater than 3 hours. Next valid time is #{next_valid_time}.", json["address_hash"].first
+    assert_equal "Claim interval must be greater than 3 hours for the same address. Next valid time is #{next_valid_time}.", json["address_hash"].first
   end
 
   test "should reject claim when one IP claim count exceeds the maximum" do

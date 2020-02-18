@@ -17,7 +17,7 @@ class ClaimEventValidatorTest < ActiveSupport::TestCase
     claim_event = build(:claim_event, address_hash: address_hash)
 
     assert_not claim_event.save
-    assert_equal "Claim interval must be greater than 3 hours. Next valid time is #{next_valid_time}.", claim_event.errors[:address_hash].first
+    assert_equal "Claim interval must be greater than 3 hours for the same address. Next valid time is #{next_valid_time}.", claim_event.errors[:address_hash].first
   end
 
   test "should reject claim when one IP claim count exceeds the maximum" do
