@@ -56,7 +56,7 @@ class ClaimEventValidator < ActiveModel::Validator
       claim_event = ClaimEvent.where(address_hash: record.address_hash).where("created_at_unixtimestamp > ?", 3.hours.ago.to_i).order(:id).first
       if claim_event.present?
         next_valid_time = Time.at(claim_event.created_at_unixtimestamp + 3.hours)
-        record.errors.add(:address_hash, "Claim interval must be greater than 3 hours. Next valid time is #{next_valid_time}.")
+        record.errors.add(:address_hash, "Claim interval must be greater than 3 hours for the same address. Next valid time is #{next_valid_time}.")
       end
     end
 end
