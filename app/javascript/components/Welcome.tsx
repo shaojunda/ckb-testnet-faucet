@@ -176,31 +176,33 @@ const Welcome: React.FC<WelcomeProps> = ({
             </Col>
           </Row>
         </Container>
-        <Container className="claim-event-list-container">
-          {state.claimEvents.length > 0 ? (
+        {state.claimEvents.length == 0 ? (
+          <Container className="d-flex empty-records-container justify-content-center align-items-center fluid">
+            <Row>
+              <Col xs="12" md="12" lg="10" xl="10">
+                <div className="text-center">
+                  <h2>No Claim Yet</h2>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        ) : (
+          <Container className="claim-event-list-container">
             <Row className="justify-content-center align-items-center">
               <Col xs="12" md="12" lg="10" xl="10">
                 <h2>Claims</h2>
               </Col>
             </Row>
-          ) : (
-            ""
-          )}
-          <Row className="justify-content-center align-items-center">
-            <Col xs="12" md="12" lg="10" xl="10">
-              {state.claimEvents.length == 0 ? (
-                <div className="justify-content-center align-items-center empty-records d-flex">
-                  <h1>No Claim Yet</h1>
-                </div>
-              ) : (
+            <Row className="justify-content-center align-items-center">
+              <Col xs="12" md="12" lg="10" xl="10">
                 <ClaimEventList
                   claimEvents={state.claimEvents}
                   aggronExplorerHost={aggronExplorerHost}
                 ></ClaimEventList>
-              )}
-            </Col>
-          </Row>
-        </Container>
+              </Col>
+            </Row>
+          </Container>
+        )}
       </React.Fragment>
     </context.Provider>
   );

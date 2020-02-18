@@ -42,19 +42,26 @@ form div.invalid-feedback {
   margin-top: 10px;
 }
 
-.claim-event-list-container {
+.claim-event-list-container,
+.empty-records-container {
   margin-top: 20px;
-  min-height: 610px;
-  h1 {
-    color: #bababa;
-  }
+  min-height: 620px;
 
   @media only screen and (max-height: 1024px) {
-    min-height: 213px;
+    min-height: 263px;
   }
   @media only screen and (max-width: 700px) {
     h2 {
       font-size: 1.5rem;
     }
+  }
+}
+
+div.empty-records-container {
+  h2 {
+    color: #bababa;
+  }
+  .text-center {
+    min-width: 200px;
   }
 }
