@@ -83,7 +83,7 @@ task :deploy do
 
     on launch: :remote_environment do
       in_path(fetch(:current_path)) do
-        command "sudo systemctl restart ckb-explorer-puma.socket ckb-explorer-puma.service"
+        command "sudo systemctl restart ckb-testnet-faucet-puma.socket ckb-testnet-faucet-puma.service"
         command "sudo systemctl restart claim_event_processor.service"
         command "sudo systemctl daemon-reload"
         invoke :'whenever:update'
