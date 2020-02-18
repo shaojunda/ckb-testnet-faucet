@@ -46,7 +46,7 @@ const Welcome: React.FC<WelcomeProps> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [state.claimEvents]);
+  }, [state]);
 
   const addNewEvent = (claimEvent: ClaimEventPresenter) => {
     const claimEvents = [claimEvent, ...state.claimEvents].sort((a, b) => {
