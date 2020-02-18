@@ -13,7 +13,7 @@ import { parseSimpleDate, formatAddressHash, context } from "../utils/util";
 const ClaimEvent: React.FC<ClaimEventProps> = ({ claimEvent }) => {
   const aggronExplorerHost = useContext(context);
   const explorer_address_url = aggronExplorerHost + "/address/";
-  const explorer_transaction_url = aggronExplorerHost + "transaction/";
+  const explorer_transaction_url = aggronExplorerHost + "/transaction/";
   return (
     <Card>
       <Card.Header>
