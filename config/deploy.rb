@@ -80,17 +80,11 @@ task :deploy do
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
-
-    on launch: :remote_environment do
-      in_path(fetch(:current_path)) do
-        command "sudo systemctl restart ckb-testnet-faucet-puma.socket ckb-testnet-faucet-puma.service"
-        command "sudo systemctl restart claim_event_processor.service"
-        command "sudo systemctl daemon-reload"
-        invoke :'whenever:update'
-      end
-    end
+    invoke :'whenever:update'
+    command "sudo systemctl restart ckb-testnet-faucet-puma.socket ckb-testnet-faucet-puma.service"
+    command "sudo systemctl restart claim_event_processor.service"
+    command "sudo systemctl daemon-reload"
   end
-
   # you can use `run :local` to run tasks on local machine before of after the deploy scripts
   # run(:local){ say 'done' }
 end
