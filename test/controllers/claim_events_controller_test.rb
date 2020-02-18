@@ -19,7 +19,7 @@ class ClaimEventsControllerTest < ActionDispatch::IntegrationTest
     post claim_events_url, params: { claim_event: { address_hash: address_hash } }
 
     assert_response 422
-    assert_equal "Claim interval must be greater than 3hours. Next valid time is #{next_valid_time}.", json["address_hash"].first
+    assert_equal "Claim interval must be greater than 3 hours. Next valid time is #{next_valid_time}.", json["address_hash"].first
   end
 
   test "should reject claim when one IP claim count exceeds the maximum" do
@@ -89,11 +89,15 @@ class ClaimEventsControllerTest < ActionDispatch::IntegrationTest
 
   test "should return 15 claims when visit claim event index" do
     create_list(:claim_event, 20)
+    account = Account.official_account
     claim_events = ClaimEvent.recent.limit(ClaimEvent::DEFAULT_CLAIM_EVENT_SIZE)
+    official_account = { "addressHash" => account.address_hash, "balance" => account.ckb_balance.to_s }
+
     get claim_events_url
 
     assert_response 200
-    assert_equal 15, json["data"].size
-    assert_equal ClaimEventSerializer.new(claim_events).serialized_json, response.body
+    assert_equal 15, json["claimEvents"]["data"].size
+    assert_equal JSON.parse(ClaimEventSerializer.new(claim_events).serialized_json)["data"], json["claimEvents"]["data"]
+    assert_equal official_account, json["officialAccount"]
   end
 end
