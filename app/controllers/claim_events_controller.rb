@@ -5,7 +5,7 @@ class ClaimEventsController < ApplicationController
     account = Account.official_account
     claim_events = ClaimEvent.recent.limit(ClaimEvent::DEFAULT_CLAIM_EVENT_SIZE)
 
-    render json: { claimEvents: ClaimEventSerializer.new(claim_events).serializable_hash, official_account: { addressHash: account.address_hash, balance: account.ckb_balance } }
+    render json: { claimEvents: ClaimEventSerializer.new(claim_events).serializable_hash, officialAccount: { addressHash: account.address_hash, balance: account.ckb_balance } }
   end
 
   def create

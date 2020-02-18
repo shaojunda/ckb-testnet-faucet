@@ -32,7 +32,7 @@ const Welcome: React.FC<WelcomeProps> = ({
         .then(response => {
           setState({
             ...state,
-            officialAccount: response.data.official_account,
+            officialAccount: response.data.officialAccount,
             claimEvents: response.data.claimEvents.data.map(
               (event: ResponseData) => {
                 return event.attributes;
