@@ -15,7 +15,7 @@ export const formatAddressHash = (addressHash: string) => {
     return "";
   }
   let addressHashMaxLength;
-  const screenWidth = window !== undefined ? window.innerWidth : 500;
+  const screenWidth = typeof window !== "undefined" ? window.innerWidth : 500;
   if (screenWidth <= 480) {
     addressHashMaxLength = 13;
   } else if (screenWidth > 480 && screenWidth <= 768) {
