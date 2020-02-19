@@ -28,12 +28,20 @@
     font-size: 12px;
     color: rgb(186, 186, 186);
   }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (min-width: 480px) and (max-width: 768px) {
     h1 {
       font-size: 2rem;
     }
     p {
       font-size: 10px;
+    }
+  }
+  @media only screen and (max-width: 480px) {
+    h1 {
+      font-size: 1.6rem;
+    }
+    p {
+      font-size: 8px;
     }
   }
 }
