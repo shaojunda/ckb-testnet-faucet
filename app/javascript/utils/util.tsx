@@ -10,32 +10,52 @@ export const parseSimpleDate = (timestamp: number | string) => {
 export const formatData = (data: number) => {
   return data < 10 ? `0${data}` : data;
 };
-export const formatAddressHash = (addressHash: string) => {
-  if (addressHash === null || addressHash === undefined) {
+export const formatHash = (hash: string, hashType: string) => {
+  if (hash === null || hash === undefined) {
     return "";
   }
-  let addressHashMaxLength;
-  const screenWidth = typeof window !== "undefined" ? window.innerWidth : 500;
-  if (screenWidth <= 480) {
-    addressHashMaxLength = 13;
-  } else if (screenWidth > 480 && screenWidth <= 768) {
-    addressHashMaxLength = 29;
-  } else {
-    addressHashMaxLength = 46;
-  }
-  const addressHashLength = addressHash.length;
-  if (addressHashLength > addressHashMaxLength) {
-    const difference = addressHashLength - addressHashMaxLength;
-    const middlePosition = parseInt(String(addressHashLength / 2));
+  const windowWidth = typeof window !== "undefined" ? window.innerWidth : 500;
+  let hashMaxLength = getHashMaxLength(windowWidth, hashType);
+  console.log(`hashType: ${hashType}, maxLength: ${hashMaxLength}`);
+  const hashLength = hash.length;
+  if (hashLength > hashMaxLength) {
+    const difference = hashLength - hashMaxLength;
+    const middlePosition = parseInt(String(hashLength / 2));
     const quotient = parseInt(String((difference - 1) / 2));
     const remainder = (difference - 1) % 2;
-    const part1 = addressHash.substring(0, middlePosition - quotient - 2);
-    const part2 = addressHash.substring(
-      middlePosition + quotient + remainder + 2
-    );
+    const part1 = hash.substring(0, middlePosition - quotient - 2);
+    const part2 = hash.substring(middlePosition + quotient + remainder + 2);
     return part1 + "..." + part2;
   } else {
-    return addressHash;
+    return hash;
+  }
+};
+export const getHashMaxLength = (windowWidth: number, hashType: string) => {
+  switch (hashType) {
+    case "tx":
+      if (windowWidth <= 320) {
+        return 14;
+      } else if (windowWidth > 320 && windowWidth <= 480) {
+        return 20;
+      } else if (windowWidth > 480 && windowWidth <= 768) {
+        return 29;
+      } else if (windowWidth > 768 && windowWidth <= 1024) {
+        return 50;
+      } else {
+        return 66;
+      }
+    case "address":
+      if (windowWidth <= 320) {
+        return 14;
+      } else if (windowWidth > 320 && windowWidth <= 480) {
+        return 20;
+      } else if (windowWidth > 480 && windowWidth <= 768) {
+        return 29;
+      } else {
+        return 46;
+      }
+    default:
+      return 46;
   }
 };
 

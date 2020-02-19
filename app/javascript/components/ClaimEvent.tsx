@@ -8,7 +8,7 @@ import {
   Tooltip,
   OverlayTrigger
 } from "react-bootstrap";
-import { parseSimpleDate, formatAddressHash, context } from "../utils/util";
+import { parseSimpleDate, formatHash, context } from "../utils/util";
 
 const ClaimEvent: React.FC<ClaimEventProps> = ({ claimEvent }) => {
   const aggronExplorerHost = useContext(context);
@@ -36,7 +36,7 @@ const ClaimEvent: React.FC<ClaimEventProps> = ({ claimEvent }) => {
                     href={explorer_transaction_url + claimEvent.txHash}
                     target="_blank"
                   >
-                    {claimEvent.txHash}
+                    {formatHash(claimEvent.txHash, "tx")}
                   </a>
                 )}
               </span>
@@ -58,7 +58,7 @@ const ClaimEvent: React.FC<ClaimEventProps> = ({ claimEvent }) => {
                   href={explorer_address_url + claimEvent.addressHash}
                   target="_blank"
                 >
-                  {formatAddressHash(claimEvent.addressHash)}
+                  {formatHash(claimEvent.addressHash, "address")}
                 </a>
               </span>
             </Col>
