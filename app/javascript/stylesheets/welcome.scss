@@ -8,6 +8,15 @@
   background-size: cover;
   height: 515px;
   padding-top: 92px;
+
+  input.form-control {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+  }
+  button.btn-outline-light:hover {
+    background-color: #d4d4d4;
+  }
 }
 
 .img-container {
