@@ -68,7 +68,9 @@ const ClaimEvent: React.FC<ClaimEventProps> = ({ claimEvent }) => {
                   <Tooltip id={`tooltip-capacity`}>Claimed capacity</Tooltip>
                 }
               >
-                <span className="has-tooltip">{claimEvent.capacity} CKB</span>
+                <span className="has-tooltip claimed-capacity">
+                  {claimEvent.capacity} CKB
+                </span>
               </OverlayTrigger>
             </Col>
           </Row>
