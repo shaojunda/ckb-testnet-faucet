@@ -141,7 +141,7 @@ const Welcome: React.FC<WelcomeProps> = ({
               xl="5"
               className="justify-content-center content-container"
             >
-              <p>Claim testnet 50000 CKB from the faucet once every 8 hours</p>
+              <p>Claim testnet 5000 CKB from the faucet once every 3 hours</p>
             </Col>
           </Row>
           <Row className="justify-content-center align-items-center">
