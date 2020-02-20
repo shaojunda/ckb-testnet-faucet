@@ -100,4 +100,17 @@ class ClaimEventsControllerTest < ActionDispatch::IntegrationTest
     assert_equal JSON.parse(ClaimEventSerializer.new(claim_events).serialized_json)["data"], json["claimEvents"]["data"]
     assert_equal official_account, json["officialAccount"]
   end
+
+  test "should return pending claim events by given address hash" do
+    create_list(:claim_event, 5, status: :processed)
+    create_list(:claim_event, 3, :skip_validate, address_hash: "ckt1qyqd5eyygtdmwdr7ge736zw6z0ju6wsw7rssu8fcve")
+    address_hash = "ckt1qyqd5eyygtdmwdr7ge736zw6z0ju6wsw7rssu8fcve"
+    claim_events = ClaimEvent.where(address_hash: address_hash).pending
+
+    get claim_event_url(address_hash)
+
+    assert_response 200
+    assert_equal 3, json["data"].size
+    assert_equal JSON.parse(ClaimEventSerializer.new(claim_events).serialized_json)["data"], json["data"]
+  end
 end

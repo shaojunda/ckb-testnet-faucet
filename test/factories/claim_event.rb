@@ -11,5 +11,9 @@ FactoryBot.define do
     fee { 0.00000548 }
     ip_addr { Faker::Internet.ip_v4_cidr }
     created_at_unixtimestamp { Time.current.to_i }
+
+    trait :skip_validate do
+      to_create { |instance| instance.save(validate: false) }
+    end
   end
 end
