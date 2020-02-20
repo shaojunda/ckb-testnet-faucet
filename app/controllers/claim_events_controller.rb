@@ -8,6 +8,11 @@ class ClaimEventsController < ApplicationController
     render json: { claimEvents: ClaimEventSerializer.new(claim_events).serializable_hash, officialAccount: { addressHash: account.address_hash, balance: account.ckb_balance } }
   end
 
+  def show
+    claim_events = ClaimEvent.where(address_hash: params[:id]).pending.limit(15)
+    render json: ClaimEventSerializer.new(claim_events)
+  end
+
   def create
     claim_event = ClaimEvent.new(claim_events_params.merge(created_at_unixtimestamp: Time.current.to_i,
       capacity: ClaimEvent::DEFAULT_CLAIM_CAPACITY, ip_addr: request.remote_ip))
