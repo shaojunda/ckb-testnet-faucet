@@ -16,7 +16,6 @@ export const formatHash = (hash: string, hashType: string) => {
   }
   const windowWidth = typeof window !== "undefined" ? window.innerWidth : 500;
   let hashMaxLength = getHashMaxLength(windowWidth, hashType);
-  console.log(`hashType: ${hashType}, maxLength: ${hashMaxLength}`);
   const hashLength = hash.length;
   if (hashLength > hashMaxLength) {
     const difference = hashLength - hashMaxLength;
