@@ -60,7 +60,8 @@ form div.invalid-feedback {
 }
 
 .claim-event-list-container,
-.empty-records-container {
+.empty-records-container,
+.search-empty-records-container {
   margin-top: 20px;
   min-height: 620px;
 
@@ -74,11 +75,28 @@ form div.invalid-feedback {
   }
 }
 
-div.empty-records-container {
+.search-empty-records-container {
+  border: 1px dashed #baba;
+}
+
+div.empty-records-container,
+.search-empty-records-container {
   h2 {
     color: #bababa;
   }
   .text-center {
     min-width: 200px;
   }
+}
+
+#searchClear {
+  position: absolute;
+  right: 29px;
+  top: 0;
+  bottom: 0;
+  height: 14px;
+  margin: auto;
+  font-size: 14px;
+  cursor: pointer;
+  color: #ccc;
 }

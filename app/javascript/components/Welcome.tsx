@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ClaimEventForm from "./ClaimEventForm";
 import ClaimEventList from "./ClaimEventList";
 import axios from "axios";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, FormControl, Form } from "react-bootstrap";
 import CKbIcon from "../images/ckb-n.png";
 import { context } from "../utils/util";
 
@@ -12,41 +12,57 @@ const Welcome: React.FC<WelcomeProps> = ({
   aggronExplorerHost
 }) => {
   const addressHash = useRef("");
+  const targetAddress = useRef("");
+  const timer = useRef<NodeJS.Timeout>();
+  const tempClaimEvents = useRef<Array<ClaimEventPresenter>>([]);
+  const claimEventPresenters = claimEvents.data.map(event => {
+    return event.attributes;
+  });
   const [state, setState] = useState({
-    claimEvents: claimEvents.data.map(event => {
-      return event.attributes;
-    }),
+    claimEvents: claimEventPresenters,
     formError: "",
     officialAccount: {
       addressHash: officialAccount.addressHash,
       balance: officialAccount.balance
-    }
+    },
+    onQuery: false
   });
 
+  tempClaimEvents.current = claimEventPresenters;
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      axios({
-        method: "GET",
-        url: "/claim_events"
-      })
-        .then(response => {
-          setState({
-            ...state,
-            officialAccount: response.data.officialAccount,
-            claimEvents: response.data.claimEvents.data.map(
-              (event: ResponseData) => {
-                return event.attributes;
-              }
-            )
-          });
-        })
-        .catch(error => {});
+    if (state.onQuery) {
+      return;
+    }
+    timer.current = global.setInterval(() => {
+      fetchClaimEvents();
     }, 5000);
 
     return () => {
-      clearInterval(timer);
+      if (timer.current) {
+        clearInterval(timer.current);
+      }
     };
-  }, [state]);
+  }, [state.claimEvents]);
+
+  const fetchClaimEvents = () => {
+    axios({
+      method: "GET",
+      url: "/claim_events"
+    })
+      .then(response => {
+        setState({
+          ...state,
+          officialAccount: response.data.officialAccount,
+          claimEvents: response.data.claimEvents.data.map(
+            (event: ResponseData) => {
+              return event.attributes;
+            }
+          )
+        });
+      })
+      .catch(error => {});
+  };
 
   const addNewEvent = (claimEvent: ClaimEventPresenter) => {
     const claimEvents = [claimEvent, ...state.claimEvents].sort((a, b) => {
@@ -62,11 +78,22 @@ const Welcome: React.FC<WelcomeProps> = ({
     event: React.FormEvent<HTMLInputElement>
   ) => {
     const target = event.target as HTMLInputElement;
-    addressHash.current = target.value;
-    setState({
-      ...state,
-      formError: ""
-    });
+    switch (target.name) {
+      case "address_hash":
+        addressHash.current = target.value;
+        setState({ ...state, formError: "" });
+        break;
+      case "target_address":
+        targetAddress.current = target.value;
+        if (target.value.trim() === "") {
+          clearSearch();
+        } else {
+          setState({
+            ...state
+          });
+        }
+    }
+
     event.preventDefault();
   };
 
@@ -103,6 +130,47 @@ const Welcome: React.FC<WelcomeProps> = ({
           formError: error.response.data["address_hash"][0]
         });
       });
+
+    event.preventDefault();
+  };
+
+  const clearSearch = () => {
+    targetAddress.current = "";
+    setState({
+      ...state,
+      claimEvents: tempClaimEvents.current,
+      onQuery: false
+    });
+  };
+
+  const handleClear: React.MouseEventHandler = (
+    event: React.MouseEvent<HTMLElement>
+  ) => {
+    clearSearch();
+    event.preventDefault();
+  };
+  const handleQuerySubmit: React.FormEventHandler<HTMLFormElement> = (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    const form = event.currentTarget;
+    const targetAddressInput = form.elements[0] as HTMLInputElement;
+    axios({
+      method: "GET",
+      url: `/claim_events/${targetAddressInput.value.replace(/[^\w\s]/gi, "")}`
+    })
+      .then(response => {
+        if (timer.current) {
+          clearInterval(timer.current);
+        }
+        setState({
+          ...state,
+          onQuery: true,
+          claimEvents: response.data.data.map((event: ResponseData) => {
+            return event.attributes;
+          })
+        });
+      })
+      .catch(error => {});
 
     event.preventDefault();
   };
@@ -176,12 +244,12 @@ const Welcome: React.FC<WelcomeProps> = ({
             </Col>
           </Row>
         </Container>
-        {state.claimEvents.length == 0 ? (
+        {!state.onQuery && state.claimEvents.length == 0 ? (
           <Container className="d-flex empty-records-container justify-content-center align-items-center fluid">
             <Row>
               <Col xs="12" md="12" lg="10" xl="10">
                 <div className="text-center">
-                  <h2>No Claim Yet</h2>
+                  <h2>No Claims</h2>
                 </div>
               </Col>
             </Row>
@@ -189,18 +257,60 @@ const Welcome: React.FC<WelcomeProps> = ({
         ) : (
           <Container className="claim-event-list-container">
             <Row className="justify-content-center align-items-center">
-              <Col xs="12" md="12" lg="10" xl="10">
+              <Col
+                xs="6"
+                md="6"
+                lg="6"
+                xl="6"
+                className="d-flex justify-content-start"
+              >
                 <h2>Claims</h2>
               </Col>
-            </Row>
-            <Row className="justify-content-center align-items-center">
-              <Col xs="12" md="12" lg="10" xl="10">
-                <ClaimEventList
-                  claimEvents={state.claimEvents}
-                  aggronExplorerHost={aggronExplorerHost}
-                ></ClaimEventList>
+              <Col
+                xs="6"
+                md="6"
+                lg="4"
+                xl="4"
+                className="d-flex justify-content-end"
+              >
+                <Form inline onSubmit={handleQuerySubmit}>
+                  <FormControl
+                    type="text"
+                    placeholder="Search Address"
+                    className="mr-sm-2"
+                    name="target_address"
+                    value={targetAddress.current}
+                    onChange={handleInput}
+                  />
+                  <a href="#" onClick={handleClear}>
+                    <span
+                      id="searchClear"
+                      className="far fa-times-circle"
+                    ></span>
+                  </a>
+                </Form>
               </Col>
             </Row>
+            {state.claimEvents.length == 0 ? (
+              <Container className="d-flex search-empty-records-container justify-content-center align-items-center fluid">
+                <Row>
+                  <Col xs="12" md="12" lg="10" xl="10">
+                    <div className="text-center">
+                      <h2>No Claims</h2>
+                    </div>
+                  </Col>
+                </Row>
+              </Container>
+            ) : (
+              <Row className="justify-content-center align-items-center">
+                <Col xs="12" md="12" lg="10" xl="10">
+                  <ClaimEventList
+                    claimEvents={state.claimEvents}
+                    aggronExplorerHost={aggronExplorerHost}
+                  ></ClaimEventList>
+                </Col>
+              </Row>
+            )}
           </Container>
         )}
       </React.Fragment>
