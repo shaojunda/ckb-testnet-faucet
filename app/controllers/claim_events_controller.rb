@@ -9,7 +9,7 @@ class ClaimEventsController < ApplicationController
   end
 
   def show
-    claim_events = ClaimEvent.where(address_hash: params[:id]).pending.limit(15)
+    claim_events = ClaimEvent.where(address_hash: params[:id]).recent.limit(15)
     render json: ClaimEventSerializer.new(claim_events)
   end
 
