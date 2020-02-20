@@ -34,7 +34,7 @@ const Welcome: React.FC<WelcomeProps> = ({
     if (state.onQuery) {
       return;
     }
-    timer.current = global.setInterval(() => {
+    timer.current = setInterval(() => {
       fetchClaimEvents();
     }, 5000);
 
