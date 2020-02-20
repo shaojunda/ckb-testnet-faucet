@@ -105,7 +105,7 @@ class ClaimEventsControllerTest < ActionDispatch::IntegrationTest
     create_list(:claim_event, 5, status: :processed)
     create_list(:claim_event, 3, :skip_validate, address_hash: "ckt1qyqd5eyygtdmwdr7ge736zw6z0ju6wsw7rssu8fcve")
     address_hash = "ckt1qyqd5eyygtdmwdr7ge736zw6z0ju6wsw7rssu8fcve"
-    claim_events = ClaimEvent.where(address_hash: address_hash).pending
+    claim_events = ClaimEvent.where(address_hash: address_hash).recent.limit(15)
 
     get claim_event_url(address_hash)
 
