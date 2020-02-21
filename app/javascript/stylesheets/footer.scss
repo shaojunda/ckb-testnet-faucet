@@ -3,18 +3,112 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
 nav.footer {
-  margin-top: 20px;
+  border: 1px solid rgb(43, 43, 43);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #e3e3e3;
+  color: rgb(227, 227, 227);
   background-color: rgb(4, 6, 7);
   p {
     margin: 0;
-    padding: 21px;
+    padding: 10px;
+    font-size: 0.7rem;
+    @media only screen and (max-width: 480px) {
+      padding: 5px;
+      font-size: 0.5rem;
+    }
   }
+
   @media only screen and (max-width: 700px) {
     padding: 10px;
     font-size: 8px;
+  }
+}
+
+.footer-container {
+  margin-top: 20px;
+  background-color: rgb(4, 6, 7);
+  @media only screen and (max-width: 768px) {
+    padding: 20px 15px;
+  }
+  img.footer-logo {
+    width: 155px;
+    @media only screen and (max-width: 768px) {
+      width: 60px;
+    }
+  }
+  span.footer-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-right: 10px;
+    color: rgb(133, 161, 234);
+    width: 90px;
+
+    @media only screen and (max-width: 768px) {
+      width: 80px;
+      margin-top: 15px;
+      font-size: 0.7rem;
+    }
+  }
+  div.footer-icon-description {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: white;
+    margin-top: 5px;
+    text-align: center;
+    @media only screen and (max-width: 768px) {
+      font-size: 8px;
+    }
+  }
+  div.footer-icon-container {
+    width: 32px;
+    height: 32px;
+    @media only screen and (max-width: 768px) {
+      width: 18px;
+      height: 18px;
+    }
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+  .footer-item-container {
+    flex-direction: column;
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 75px;
+    height: auto;
+    @media only screen and (max-width: 768px) {
+      width: 35px;
+    }
+    svg {
+      width: 32px;
+      height: 32px;
+      color: white;
+      @media only screen and (max-width: 768px) {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  .footer-items-container {
+    padding: 20px 0 25px;
+    div.row {
+      // margin: 10px 0;
+    }
+    .footer-item-col {
+      margin: 10px 0;
+      @media only screen and (max-width: 768px) {
+        margin: 5px 0;
+      }
+    }
+    .footer-items {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1 1 0%;
+      a {
+        text-decoration: none;
+      }
+    }
   }
 }
