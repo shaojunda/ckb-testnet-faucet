@@ -41,8 +41,18 @@ class SendCapacityService
     end
 
     def handle_send_capacity(first_pending_event)
-      tx_hash = ckb_wallet.send_capacity(first_pending_event.address_hash, first_pending_event.capacity, fee: ClaimEvent::DEFAULT_TRANSACTION_FEE, outputs_validator: "passthrough")
-      first_pending_event.update!(tx_hash: tx_hash, tx_status: "pending", fee: ClaimEvent::DEFAULT_TRANSACTION_FEE)
+      tx = ckb_wallet.generate_tx(first_pending_event.address_hash, first_pending_event.capacity)
+      tx.witnesses = tx.witnesses.map do |witness|
+        case witness
+        when CKB::Types::Witness
+          CKB::Serializers::WitnessArgsSerializer.from(witness).serialize
+        else
+          witness
+        end
+      end
+      min_tx_fee = tx.fee(1000) + 100
+      tx_hash = ckb_wallet.send_capacity(first_pending_event.address_hash, first_pending_event.capacity, fee: min_tx_fee, outputs_validator: "passthrough")
+      first_pending_event.update!(tx_hash: tx_hash, tx_status: "pending", fee: min_tx_fee)
     rescue CKB::RPCError => e
       puts e
     end
