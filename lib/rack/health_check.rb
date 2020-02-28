@@ -7,43 +7,19 @@ module Rack
       return [401, { "Content-Type" => "application/json" }, ["Ip Address not allowed"]] unless allowed_ip?(req.ip)
 
       status = {
-        redis: {
-          connected: redis_connected?
-        },
-        postgres: {
-          connected: postgres_connected?,
-          migrations_updated: postgres_migrations_updated?
-        },
         accounts: {
           balances: accounts_balance
         },
         rpc: {
           connected: rpc_connected?
-        }
+        },
+        claim_event_processor_status: claim_event_processor_status
       }
 
       [200, { "Content-Type" => "application/json" }, [status.to_json]]
     end
 
     protected
-      def redis_connected?
-        $redis.ping == "PONG" rescue false
-      end
-
-      def postgres_connected?
-        ApplicationRecord.establish_connection
-        ApplicationRecord.connection
-        ApplicationRecord.connected?
-      rescue
-        false
-      end
-
-      def postgres_migrations_updated?
-        return false unless postgres_connected?
-
-        !ApplicationRecord.connection.migration_context.needs_migration?
-      end
-
       def accounts_balance
         Account.all.pluck(:address_hash, :balance)
       end
@@ -55,6 +31,11 @@ module Rack
       def allowed_ip?(remote_ip)
         allowed_ips = ["127.0.0.1", "::1"].concat(Rails.application.credentials.ALLOWED_IPS || [])
         allowed_ips.include?(remote_ip)
+      end
+
+      def claim_event_processor_status
+        current_timestamp = Time.current.to_i
+        ClaimEvent.pending.recent.limit(10).pluck(:created_at_unixtimestamp).any? { |timestamp| current_timestamp - timestamp > 10.minutes } ? "delayed" : "normal"
       end
   end
 end
