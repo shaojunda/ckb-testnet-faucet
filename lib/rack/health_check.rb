@@ -13,7 +13,8 @@ module Rack
         rpc: {
           connected: rpc_connected?
         },
-        claim_event_processor_status: claim_event_processor_status
+        claim_event_processor_status: claim_event_processor_status,
+        daily_claim_amount: daily_claim_amount
       }
 
       [200, { "Content-Type" => "application/json" }, [status.to_json]]
@@ -29,6 +30,8 @@ module Rack
       end
 
       def allowed_ip?(remote_ip)
+        return true unless Rails.application.credentials.ENABLE_ALLOWED_IPS
+
         allowed_ips = ["127.0.0.1", "::1"].concat(Rails.application.credentials.ALLOWED_IPS || [])
         allowed_ips.include?(remote_ip)
       end
@@ -36,6 +39,10 @@ module Rack
       def claim_event_processor_status
         current_timestamp = Time.current.to_i
         ClaimEvent.pending.recent.limit(10).pluck(:created_at_unixtimestamp).any? { |timestamp| current_timestamp - timestamp > 10.minutes } ? "delayed" : "normal"
+      end
+
+      def daily_claim_amount
+        ClaimEvent.processed.daily.sum(:capacity) / 10**8
       end
   end
 end
