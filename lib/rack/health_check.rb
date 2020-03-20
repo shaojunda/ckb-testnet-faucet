@@ -30,6 +30,8 @@ module Rack
       end
 
       def allowed_ip?(remote_ip)
+        return true unless Rails.application.credentials.ENABLE_ALLOWED_IPS
+
         allowed_ips = ["127.0.0.1", "::1"].concat(Rails.application.credentials.ALLOWED_IPS || [])
         allowed_ips.include?(remote_ip)
       end
