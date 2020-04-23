@@ -3,6 +3,7 @@
 class SendCapacityService
   def initialize(ckb_wallet)
     @ckb_wallet = ckb_wallet
+    @api = ckb_wallet.api
   end
 
   def call
@@ -12,7 +13,7 @@ class SendCapacityService
 
       first_pending_event.lock!
       if first_pending_event.tx_hash.present?
-        tx = ckb_wallet.get_transaction(first_pending_event.tx_hash)
+        tx = api.get_transaction(first_pending_event.tx_hash)
 
         if tx.present?
           handle_state_change(first_pending_event, tx)
@@ -26,7 +27,7 @@ class SendCapacityService
   end
 
   private
-    attr_reader :ckb_wallet
+    attr_reader :ckb_wallet, :api
 
     def handle_state_change(first_pending_event, tx)
       return if tx.tx_status.status == "pending"
@@ -41,17 +42,9 @@ class SendCapacityService
     end
 
     def handle_send_capacity(first_pending_event)
-      tx = ckb_wallet.generate_tx(first_pending_event.address_hash, first_pending_event.capacity)
-      tx.witnesses = tx.witnesses.map do |witness|
-        case witness
-        when CKB::Types::Witness
-          CKB::Serializers::WitnessArgsSerializer.from(witness).serialize
-        else
-          witness
-        end
-      end
-      min_tx_fee = tx.fee(1000) + 100
-      tx_hash = ckb_wallet.send_capacity(first_pending_event.address_hash, first_pending_event.capacity, fee: min_tx_fee, outputs_validator: "passthrough")
+      tx_generator = ckb_wallet.generate(first_pending_event.address_hash, first_pending_event.capacity)
+      tx = ckb_wallet.sign(tx_generator, Rails.application.credentials.OFFICIAL_WALLET_PRIVATE_KEY)
+      tx_hash = api.send_transaction(tx)
       first_pending_event.update!(tx_hash: tx_hash, tx_status: "pending", fee: min_tx_fee)
     rescue CKB::RPCError => e
       puts e
