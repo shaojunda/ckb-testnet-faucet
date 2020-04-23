@@ -3,9 +3,8 @@
 require_relative "../config/environment"
 
 api = CKB::API.new(host: Rails.application.credentials.CKB_NODE_URL)
-ckb_wallet = CKB::Wallet.from_hex(api, Rails.application.credentials.OFFICIAL_WALLET_PRIVATE_KEY)
-send_capacity_service = SendCapacityService.new(ckb_wallet)
+ckb_wallet = CKB::Wallets::NewWallet.new(api: api, from_addresses: Account.last.address_hash, collector_type: :default_indexer)
 
 loop do
-  send_capacity_service.call
+  SendCapacityService.new(ckb_wallet).call
 end
