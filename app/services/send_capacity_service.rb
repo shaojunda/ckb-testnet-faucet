@@ -4,6 +4,7 @@ class SendCapacityService
   def initialize(ckb_wallet)
     @ckb_wallet = ckb_wallet
     @api = ckb_wallet.api
+    CKB::Config.instance.set_api(Rails.application.credentials.CKB_NODE_URL)
   end
 
   def call
