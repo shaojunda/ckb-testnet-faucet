@@ -46,8 +46,15 @@ class SendCapacityService
       tx_generator = ckb_wallet.generate(first_pending_event.address_hash, first_pending_event.capacity)
       tx = ckb_wallet.sign(tx_generator, Rails.application.credentials.OFFICIAL_WALLET_PRIVATE_KEY)
       tx_hash = api.send_transaction(tx)
-      first_pending_event.update!(tx_hash: tx_hash, tx_status: "pending", fee: min_tx_fee)
+      first_pending_event.update!(tx_hash: tx_hash, tx_status: "pending", fee: tx_fee(tx))
     rescue CKB::RPCError => e
       puts e
+    end
+
+    def tx_fee(tx)
+      input_capacities = tx.inputs.map { |input| api.get_transaction(input.previous_output.tx_hash).transaction.outputs[input.previous_output.index].capacity }.sum
+      output_capacities = tx.outputs.map(&:capacity).sum
+
+      input_capacities - output_capacities
     end
 end
