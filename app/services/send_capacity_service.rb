@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 class SendCapacityService
-  def initialize(ckb_wallet)
-    @ckb_wallet = ckb_wallet
-    @api = ckb_wallet.api
-    CKB::Config.instance.set_api(Rails.application.credentials.CKB_NODE_URL)
-  end
-
   def call
     ClaimEvent.transaction do
       first_pending_event = ClaimEvent.order(:id).pending.first
@@ -28,7 +22,13 @@ class SendCapacityService
   end
 
   private
-    attr_reader :ckb_wallet, :api
+    def ckb_wallet
+      @ckb_wallet ||= CKB::Wallets::NewWallet.new(api: api, from_addresses: Account.last.address_hash, collector_type: :default_indexer)
+    end
+
+    def api
+      @api ||= SdkApi.instance
+    end
 
     def handle_state_change(first_pending_event, tx)
       return if tx.tx_status.status == "pending"
