@@ -20,20 +20,7 @@ const Footer: React.FC = () => {
     <React.Fragment>
       <Container fluid className="footer-container">
         <Row className="justify-content-center align-items-center">
-          <Col xs="12" sm="12" md="12" lg="5" xl="5">
-            <Container className="d-flex align-items-center justify-content-center">
-              <Row>
-                <Col>
-                  <img
-                    src={FooterLogo}
-                    className="footer-logo"
-                    alt="footer logo"
-                  />
-                </Col>
-              </Row>
-            </Container>
-          </Col>
-          <Col>
+          <Col xs="12" sm="12" md="6" lg="6" xl="6">
             <Container className="footer-items-container">
               <Row className="justify-content-start align-items-end">
                 <Col className="d-flex align-items-end footer-item-col">
