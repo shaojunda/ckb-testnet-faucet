@@ -9,7 +9,7 @@ class ClaimEventValidator < ActiveModel::Validator
     record.errors.add(:address_hash, "Address is invalid.") && (return) if record.address_hash.blank? || record.address_hash.length < MINIMUM_ADDRESS_HASH_LENGTH
 
     only_claim_once_every_24h(record)
-    receive_up_to_1_rewards_per_IP_per_day(record)
+    receive_up_to_10_rewards_per_IP_per_day(record)
     address_hash_must_be_a_testnet_address(record)
     address_hash_cannot_be_short_multisig(record)
     address_hash_cannot_be_official_address(record)
