@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class ClaimEventValidator < ActiveModel::Validator
-  MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY = 8
-  MAXIMUM_PAYMENT_AMOUNT_PER_DAY = 4_000_000 * 10**8
+  MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY = 10
+  MAXIMUM_PAYMENT_AMOUNT_PER_DAY = 5_000_000 * 10**8
   MINIMUM_ADDRESS_HASH_LENGTH = 40
 
   def validate(record)
     record.errors.add(:address_hash, "Address is invalid.") && (return) if record.address_hash.blank? || record.address_hash.length < MINIMUM_ADDRESS_HASH_LENGTH
 
-    claim_interval_must_be_greater_than_3hours(record)
-    receive_up_to_10_rewards_per_IP_per_day(record)
+    only_claim_once_every_24h(record)
+    receive_up_to_1_rewards_per_IP_per_day(record)
     address_hash_must_be_a_testnet_address(record)
     address_hash_cannot_be_short_multisig(record)
     address_hash_cannot_be_official_address(record)
@@ -48,15 +48,13 @@ class ClaimEventValidator < ActiveModel::Validator
 
     def receive_up_to_10_rewards_per_IP_per_day(record)
       if ClaimEvent.where(ip_addr: record.ip_addr).daily.count >= MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY
-        record.errors.add(:address_hash, "Get up to 8 times claim per IP per day.")
+        record.errors.add(:address_hash, "Get up to 10 times claim per IP per day.")
       end
     end
 
-    def claim_interval_must_be_greater_than_3hours(record)
-      claim_event = ClaimEvent.where(address_hash: record.address_hash).where("created_at_unixtimestamp > ?", 3.hours.ago.to_i).order(:id).first
-      if claim_event.present?
-        next_valid_time = Time.at(claim_event.created_at_unixtimestamp + 3.hours)
-        record.errors.add(:address_hash, "Claim interval must be greater than 3 hours for the same address. Next valid time is #{next_valid_time}.")
+    def only_claim_once_every_24h(record)
+      if ClaimEvent.where(address_hash: record.address_hash).h24.exists?
+        record.errors.add(:address_hash, "An address can only be claimed once every 24 hours.")
       end
     end
 end

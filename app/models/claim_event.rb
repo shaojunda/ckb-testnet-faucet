@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class ClaimEvent < ApplicationRecord
-  DEFAULT_CLAIM_CAPACITY = 5000 * 10**8
-  DEFAULT_TRANSACTION_FEE = 1000
+  DEFAULT_CLAIM_CAPACITY = 50000 * 10**8
   DEFAULT_CLAIM_EVENT_SIZE = 15
   enum status: { pending: 0, processed: 1 }
   enum tx_status: { pending: 0, proposed: 1, committed: 2 }, _prefix: :tx
@@ -11,6 +10,7 @@ class ClaimEvent < ApplicationRecord
   validates_with ClaimEventValidator, on: :create
 
   scope :daily, -> { where("created_at_unixtimestamp >= ? and created_at_unixtimestamp <= ?", Time.current.beginning_of_day.to_i, Time.current.end_of_day.to_i) }
+  scope :h24, -> { where("created_at_unixtimestamp >= ?", 24.hours.ago.to_i) }
   scope :recent, -> { order(id: :desc) }
 end
 
