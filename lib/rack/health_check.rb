@@ -2,8 +2,8 @@
 
 module Rack
   class  HealthCheck
-    WEEKLY_MINIMUM_QUOTA = (5000 * 100) * 7 * 10**8
-    DAILY_MINIMUM_QUOTA = (5000 * 1000) * 10**8
+    WEEKLY_MINIMUM_QUOTA = (50000 * 100) * 7 * 10**8
+    DAILY_MINIMUM_QUOTA = (50000 * 1000) * 10**8
     def call(env)
       req = Rack::Request.new(env)
       return [401, { "Content-Type" => "application/json" }, ["Ip Address not allowed"]] unless allowed_ip?(req.ip)
