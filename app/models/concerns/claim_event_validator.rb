@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ClaimEventValidator < ActiveModel::Validator
-  MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY = 1
+  MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY = 10
   MAXIMUM_PAYMENT_AMOUNT_PER_DAY = 5_000_000 * 10**8
   MINIMUM_ADDRESS_HASH_LENGTH = 40
 
@@ -46,9 +46,9 @@ class ClaimEventValidator < ActiveModel::Validator
       record.errors.add(:address_hash, "Address is invalid.")
     end
 
-    def receive_up_to_1_rewards_per_IP_per_day(record)
+    def receive_up_to_10_rewards_per_IP_per_day(record)
       if ClaimEvent.where(ip_addr: record.ip_addr).daily.count >= MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY
-        record.errors.add(:address_hash, "Get up to 1 times claim per IP per day.")
+        record.errors.add(:address_hash, "Get up to 10 times claim per IP per day.")
       end
     end
 
