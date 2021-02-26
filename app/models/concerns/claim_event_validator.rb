@@ -2,7 +2,7 @@
 
 class ClaimEventValidator < ActiveModel::Validator
   MAXIMUM_CLAIM_COUNT_PER_IP_PER_DAY = 10
-  MAXIMUM_PAYMENT_AMOUNT_PER_DAY = 5_000_000 * 10**8
+  MAXIMUM_PAYMENT_AMOUNT_PER_DAY = 10_000_000 * 10**8
   MINIMUM_ADDRESS_HASH_LENGTH = 40
 
   def validate(record)
