@@ -44,6 +44,7 @@ const Welcome: React.FC<WelcomeProps> = ({
       if (timer.current) {
         console.log("clearInterval")
         clearInterval(timer.current);
+        timer.current = undefined;
       }
     };
   }, []);
@@ -164,6 +165,7 @@ const Welcome: React.FC<WelcomeProps> = ({
       .then(response => {
         if (timer.current) {
           clearInterval(timer.current);
+          timer.current = undefined;
         }
         setState({
           ...state,
