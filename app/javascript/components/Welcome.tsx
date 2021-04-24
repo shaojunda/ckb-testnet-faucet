@@ -5,6 +5,7 @@ import axios from "axios";
 import { Container, Row, Col, FormControl, Form } from "react-bootstrap";
 import CKbIcon from "../images/ckb-n.png";
 import { context } from "../utils/util";
+import useSWR from "swr";
 
 const Welcome: React.FC<WelcomeProps> = ({
   claimEvents,
@@ -30,29 +31,10 @@ const Welcome: React.FC<WelcomeProps> = ({
 
   tempClaimEvents.current = claimEventPresenters;
 
-  useEffect(() => {
-    console.log("begin...")
-    if (state.onQuery) {
-      return;
-    }
-    timer.current = setInterval(() => {
-      console.log("setInterval...")
-      fetchClaimEvents();
-    }, 5000);
-
-    return () => {
-      if (timer.current) {
-        console.log("clearInterval")
-        clearInterval(timer.current);
-        timer.current = undefined;
-      }
-    };
-  }, []);
-
-  const fetchClaimEvents = () => {
+  const fetchClaimEvents = (url: string) => {
     axios({
       method: "GET",
-      url: "/claim_events"
+      url: url
     })
       .then(response => {
         setState({
@@ -67,6 +49,8 @@ const Welcome: React.FC<WelcomeProps> = ({
       })
       .catch(error => {});
   };
+
+  useSWR("/claim_events", fetchClaimEvents, { refreshInterval: 5000 })
 
   const addNewEvent = (claimEvent: ClaimEventPresenter) => {
     const claimEvents = [claimEvent, ...state.claimEvents].sort((a, b) => {
@@ -163,10 +147,6 @@ const Welcome: React.FC<WelcomeProps> = ({
       url: `/claim_events/${targetAddressInput.value.replace(/[^\w\s]/gi, "")}`
     })
       .then(response => {
-        if (timer.current) {
-          clearInterval(timer.current);
-          timer.current = undefined;
-        }
         setState({
           ...state,
           onQuery: true,
