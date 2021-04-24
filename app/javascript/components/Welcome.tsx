@@ -14,7 +14,6 @@ const Welcome: React.FC<WelcomeProps> = ({
 }) => {
   const addressHash = useRef("");
   const targetAddress = useRef("");
-  const timer = useRef<NodeJS.Timeout>();
   const tempClaimEvents = useRef<Array<ClaimEventPresenter>>([]);
   const claimEventPresenters = claimEvents.data.map(event => {
     return event.attributes;
