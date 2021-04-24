@@ -43,7 +43,7 @@ const Welcome: React.FC<WelcomeProps> = ({
         clearInterval(timer.current);
       }
     };
-  }, [state.claimEvents]);
+  }, []);
 
   const fetchClaimEvents = () => {
     axios({
