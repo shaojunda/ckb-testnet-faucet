@@ -31,15 +31,18 @@ const Welcome: React.FC<WelcomeProps> = ({
   tempClaimEvents.current = claimEventPresenters;
 
   useEffect(() => {
+    console.log("begin...")
     if (state.onQuery) {
       return;
     }
     timer.current = setInterval(() => {
+      console.log("setInterval...")
       fetchClaimEvents();
     }, 5000);
 
     return () => {
       if (timer.current) {
+        console.log("clearInterval")
         clearInterval(timer.current);
       }
     };
