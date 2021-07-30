@@ -225,7 +225,7 @@ GEM
       tilt
     redis (4.1.4)
     regexp_parser (1.7.0)
-    rexml (3.2.4)
+    rexml (3.2.5)
     rubocop (0.84.0)
       parallel (~> 1.10)
       parser (>= 2.7.0.1)
