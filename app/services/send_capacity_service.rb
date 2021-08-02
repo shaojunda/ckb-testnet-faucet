@@ -3,21 +3,21 @@
 class SendCapacityService
   def call
     ClaimEvent.transaction do
-      pending_events = ClaimEvent.order(:id).pending.limit(100)
+      pending_events = ClaimEvent.order(:id).pending.limit(100).group_by(&:tx_hash)
       return if pending_events.blank?
 
-      first_pending_event = pending_events.first
-      first_pending_event.lock!
-      if first_pending_event.tx_hash.present?
-        tx = api.get_transaction(first_pending_event.tx_hash)
+      pending_events.each do |tx_hash, events|
+        if tx_hash.present?
+          tx = api.get_transaction(tx_hash)
 
-        if tx.present?
-          handle_state_change(pending_events, tx)
+          if tx.present?
+            handle_state_change(events, tx)
+          else
+            handle_send_capacity(events)
+          end
         else
-          handle_send_capacity(pending_events)
+          handle_send_capacity(events)
         end
-      else
-        handle_send_capacity(pending_events)
       end
     end
   end
@@ -39,11 +39,11 @@ class SendCapacityService
       return if tx.tx_status.status == "pending"
 
       if tx.tx_status.status == "committed"
-        pending_events.update_all(status: "processed")
-        pending_events.update_all(tx_status: tx.tx_status.status)
-        Account.official_account.decrement!(:balance, pending_events.sum(:capacity))
+        pending_events.map { |pending_event| pending_event.processed! }
+        pending_events.map { |pending_event| pending_event.update!(tx_status: tx.tx_status.status) }
+        Account.official_account.decrement!(:balance, pending_events.inject(0) { |sum, event| sum + event.capacity })
       else
-        pending_events.update_all(tx_status: tx.tx_status.status)
+        pending_events.map { |pending_event| pending_event.update!(tx_status: tx.tx_status.status) }
       end
     end
 
@@ -59,7 +59,7 @@ class SendCapacityService
       tx_generator = ckb_wallet.advance_generate(to_infos: to_infos)
       tx = ckb_wallet.sign(tx_generator, Rails.application.credentials.OFFICIAL_WALLET_PRIVATE_KEY)
       tx_hash = api.send_transaction(tx)
-      pending_events.update_all(tx_hash: tx_hash, tx_status: "pending", fee: tx_fee(tx))
+      pending_events.map { |pending_event| pending_event.update!(tx_hash: tx_hash, tx_status: "pending", fee: tx_fee(tx)) }
     rescue CKB::RPCError => e
       puts e
     end
