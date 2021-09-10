@@ -6,13 +6,6 @@ class SendCapacityService
       pending_events = ClaimEvent.order(:id).pending.limit(100).group_by(&:tx_hash)
       return if pending_events.blank?
 
-      pending_events.values.flatten.first.lock!
-      if pending_events.keys.compact.size > 1
-        ClaimEvent.where(id: pending_events.values.flatten.pluck(:id)).update_all(tx_hash: nil)
-        pending_events.values.flatten.map(&:touch)
-        api.clear_tx_pool
-      end
-
       pending_events.each do |tx_hash, events|
         if tx_hash.present?
           tx = api.get_transaction(tx_hash)
@@ -20,9 +13,11 @@ class SendCapacityService
           if tx.present?
             handle_state_change(events, tx)
           else
+            return if pending_events.keys.compact.size > 1
             handle_send_capacity(events)
           end
         else
+          return if pending_events.keys.compact.size > 1
           handle_send_capacity(events)
         end
       end
