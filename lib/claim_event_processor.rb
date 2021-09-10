@@ -4,5 +4,5 @@ require_relative "../config/environment"
 
 loop do
   SendCapacityService.new.call
-  sleep(30)
+  sleep(10)
 end

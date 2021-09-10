@@ -5,6 +5,11 @@ class SendCapacityService
     ClaimEvent.transaction do
       pending_events = ClaimEvent.order(:id).pending.limit(100).group_by(&:tx_hash)
       return if pending_events.blank?
+      if pending_events.keys.compact.size > 1
+        ClaimEvent.where(id: pending_events.values.flatten.pluck(:id)).update_all(tx_hash: nil)
+        pending_events.map(&:touch)
+        api.clear_tx_pool
+      end
 
       pending_events.each do |tx_hash, events|
         if tx_hash.present?
@@ -28,7 +33,7 @@ class SendCapacityService
     end
 
     def api
-      @api ||= SdkApi.instance
+      @api ||= SdkApi.instance.api
     end
 
     def indexer_api
