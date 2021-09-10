@@ -7,7 +7,7 @@ class SendCapacityService
       return if pending_events.blank?
       if pending_events.keys.compact.size > 1
         ClaimEvent.where(id: pending_events.values.flatten.pluck(:id)).update_all(tx_hash: nil)
-        pending_events.map(&:touch)
+        pending_events.values.flatten.map(&:touch)
         api.clear_tx_pool
       end
 
