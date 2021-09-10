@@ -5,6 +5,8 @@ class SendCapacityService
     ClaimEvent.transaction do
       pending_events = ClaimEvent.order(:id).pending.limit(100).group_by(&:tx_hash)
       return if pending_events.blank?
+
+      pending_events.values.flatten.first.lock!
       if pending_events.keys.compact.size > 1
         ClaimEvent.where(id: pending_events.values.flatten.pluck(:id)).update_all(tx_hash: nil)
         pending_events.values.flatten.map(&:touch)
