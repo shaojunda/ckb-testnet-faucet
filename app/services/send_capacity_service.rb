@@ -13,11 +13,11 @@ class SendCapacityService
           if tx.present?
             handle_state_change(events, tx)
           else
-            return if pending_events.keys.compact.size > 1
+            next if pending_events.keys.compact.size > 1
             handle_send_capacity(events)
           end
         else
-          return if pending_events.keys.compact.size > 1
+          next if pending_events.keys.compact.size > 1
           handle_send_capacity(events)
         end
       end
