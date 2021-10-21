@@ -13,9 +13,11 @@ class SendCapacityService
           if tx.present?
             handle_state_change(events, tx)
           else
+            next if pending_events.keys.compact.size > 1
             handle_send_capacity(events)
           end
         else
+          next if pending_events.keys.compact.size > 1
           handle_send_capacity(events)
         end
       end
@@ -28,7 +30,7 @@ class SendCapacityService
     end
 
     def api
-      @api ||= SdkApi.instance
+      @api ||= SdkApi.instance.api
     end
 
     def indexer_api
@@ -58,7 +60,7 @@ class SendCapacityService
       end
       tx_generator = ckb_wallet.advance_generate(to_infos: to_infos)
       tx = ckb_wallet.sign(tx_generator, Rails.application.credentials.OFFICIAL_WALLET_PRIVATE_KEY)
-      tx_hash = api.send_transaction(tx)
+      tx_hash = api.send_transaction(tx, "passthrough")
       pending_events.map { |pending_event| pending_event.update!(tx_hash: tx_hash, tx_status: "pending", fee: tx_fee(tx)) }
     rescue CKB::RPCError => e
       puts e
