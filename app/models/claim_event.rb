@@ -4,7 +4,7 @@ class ClaimEvent < ApplicationRecord
   DEFAULT_CLAIM_CAPACITY = 10000 * 10**8
   DEFAULT_CLAIM_EVENT_SIZE = 15
   enum status: { pending: 0, processed: 1 }
-  enum tx_status: { pending: 0, proposed: 1, committed: 2, rejected: 3 }, _prefix: :tx
+  enum tx_status: { pending: 0, proposed: 1, committed: 2, rejected: 3, unknown: 4 }, _prefix: :tx
 
   validates_presence_of :address_hash, :capacity, :created_at_unixtimestamp, :ip_addr, on: :create
   validates_with ClaimEventValidator, on: :create
