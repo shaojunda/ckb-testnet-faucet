@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/nervosnetwork/ckb-sdk-ruby.git
-  revision: 057f61cb14691d25f9fef246fca3ff83b4b10229
+  revision: d9611c71221dc416aa30ac9ffe89ed3569c1c537
   branch: develop
   specs:
     ckb-sdk-ruby (0.41.0)
@@ -120,7 +120,7 @@ GEM
       railties (>= 4.2.0)
     fast_jsonapi (1.5)
       activesupport (>= 4.2)
-    ffi (1.15.3)
+    ffi (1.15.5)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     hiredis (0.6.3)
